@@ -1,81 +1,77 @@
 ﻿using System;
+using System.Timers;
 using UnityEngine;
 using TMPro;
 
 public class TimerManager : MonoBehaviour {
 	public ProgaressBar progress;
-	[SerializeField] private float _nowTime;
-	[SerializeField, Range(0, 600)] private int _initTime;
-	
-	[SerializeField] private float _countTime;
-	[SerializeField] private TextMeshProUGUI _mTimer;
-	[SerializeField] private TextMeshProUGUI _sTimer;
-
 	public GameObject[] backgrounds;
 	public GameObject[] canvass;
-
-	private bool _isTimerActive;
 	
-	public AudioClip ac_alert;
-	private AudioSource audioSource;
+	[SerializeField] private float _countdown;
+	[SerializeField] private TextMeshProUGUI _uiMinutes;
+	[SerializeField] private TextMeshProUGUI _uiSeconds;
+	
+	private bool _enableTimer;
+	private AudioClip _soundPotato;
+	private AudioSource _audioSource;
 	
 	private void Awake() {
-		_nowTime = 0;	//initialize
-		_isTimerActive = false;
-		audioSource = gameObject.GetComponent<AudioSource>();
+		_enableTimer = false;
+		_audioSource = gameObject.GetComponent<AudioSource>();
 		initScene();
 	}
 
 	public void StartTimer(int second) {
 		nextScene();
-		_initTime = second;
-		_nowTime = 0;
-		_isTimerActive = true;
+		//音を止める
+		_audioSource.Stop();
+		//プログレスバーの有効化
 		progress.start(second);
-		audioSource.Stop();
+		_countdown = second;
+		_enableTimer = true;
 	}
 
-	void nextScene() {
-		foreach (GameObject obj in backgrounds) {
-			obj.SetActive(true);
-		}
-		foreach (GameObject obj in canvass) {
-			obj.SetActive(false);
-		}
-	}
-
-	void initScene() {
-		foreach (GameObject obj in backgrounds) {
-			obj.SetActive(false);
-		}
-		foreach (GameObject obj in canvass) {
-			obj.SetActive(true);
-		}
+	// タイマーの文字更新
+	void updateTimerDisplay() {
+		if (_countdown <= 0)
+			_uiMinutes.text = Convert.ToString((int) Mathf.Floor(_countdown/60));
+		else
+			_uiMinutes.text = "0";
+		// 一桁の場合,左を0で埋める.
+		_uiSeconds.text = Convert.ToString((int) _countdown % 60).PadLeft(2,'0');
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (!_isTimerActive) {
-			_mTimer.text = _countTime.ToString();
+		//タイマーが無効の場合
+		if (!_enableTimer)
 			return;
-		}
 
-		_nowTime += Time.deltaTime;
-		_countTime = _initTime - (int)Mathf.Floor(_nowTime);
+		_countdown -= Time.deltaTime;
+		updateTimerDisplay();
 		
-		_mTimer.text = Convert.ToString(Mathf.Floor(_countTime/60));
-		float s = _countTime % 60;
-		_sTimer.text = Convert.ToString(s);
-		
-		//タイマーカウントしたら
-		if (_countTime <= 0) {
-			alert();
-			_isTimerActive = false;
-		}
+		if (_countdown <= 0)
+			complate();
 	}
 
-	void alert() {
-		audioSource.clip = ac_alert;
-		audioSource.Play ();
+	void complate() {
+		_enableTimer = false;
+		_audioSource.clip = _soundPotato;
+		_audioSource.Play ();
+	}
+	
+	void nextScene() {
+		foreach (GameObject obj in backgrounds)
+			obj.SetActive(true);
+		foreach (GameObject obj in canvass)
+			obj.SetActive(false);
+	}
+
+	void initScene() {
+		foreach (GameObject obj in backgrounds)
+			obj.SetActive(false);
+		foreach (GameObject obj in canvass)
+			obj.SetActive(true);
 	}
 }

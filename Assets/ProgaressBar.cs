@@ -4,22 +4,21 @@ using DG.Tweening;
 using UnityEngine;
 
 public class ProgaressBar : MonoBehaviour {
-	RectTransform rectTran;
-	private Vector3 init_pos;
-	private Vector3 target_pos;
-	private RectTransform _rectTransform;
+	private Vector3 _startPos,_target_pos;
+	private float _endPosX;
+	private RectTransform _rect;
 	
 	void Awake () {
-		_rectTransform = gameObject.GetComponent<RectTransform>();
-		init_pos = new Vector3(-14.65f,0,0);
-		_rectTransform.position = init_pos;
+		_rect = gameObject.GetComponent<RectTransform>();
+		_startPos = new Vector3(-14.65f,0,0);
+		_endPosX = -4.28f;
 	}
 
-	public void start(int time) {
-		_rectTransform.position = init_pos;
-		_rectTransform.DOMoveX (
-			-4.28f,　　//移動後の座標
-			time　　　　//時間
+	public void start(int countdown) {
+		_rect.position = _startPos;
+		_rect.DOMoveX (
+			_endPosX,　　//移動後の座標
+			countdown　　　　//時間
 		);
 	}
 }
