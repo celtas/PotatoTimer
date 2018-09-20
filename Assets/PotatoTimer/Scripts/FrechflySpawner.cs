@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
+using UnityEngine.SceneManagement;
 
 public class FrechflySpawner : MonoBehaviour {
 	static public FrechflySpawner instance;
@@ -9,7 +11,7 @@ public class FrechflySpawner : MonoBehaviour {
 
 	private Vector2 position;
 	private int count = 0;
-	
+		
 	void Awake () {
 		if (instance == null) {
 			instance = this;
@@ -23,10 +25,13 @@ public class FrechflySpawner : MonoBehaviour {
 	void Start () {
 		position = transform.position;
 	}
-	
+
 	void Update () {
-		if (count > 290)
+		if (count > 290) {
+			TitleManager.instance.toggleScene();
+			gameObject.SetActive(false);
 			return;
+		}
 
 		//ポテトを生成
 		for (int i = 0; i < 6; i++) {

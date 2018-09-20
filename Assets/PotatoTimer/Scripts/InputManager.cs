@@ -15,7 +15,7 @@ public class InputManager : MonoBehaviour {
 	void Update () {
 		if (inputEvent == null)
 			return;
-		
+
 		UpdateMouseEvent();
 		UpdateTouchEvent();
 	}
@@ -31,13 +31,13 @@ public class InputManager : MonoBehaviour {
 
 	//マウス処理
 	void UpdateMouseEvent() {
-		if (Input.GetMouseButtonDown(0))	inputEvent(this, new InputEventArgs(InputState.SINGLE_TOUCH,Input.mousePosition));
-		else if (Input.GetMouseButton(0)) 	inputEvent(this, new InputEventArgs(InputState.HOLD,Input.mousePosition));
+		if (Input.GetMouseButtonDown(0))
+			inputEvent(this, new InputEventArgs(InputState.SINGLE_TOUCH,Input.mousePosition));
+		else if (Input.GetMouseButton(0))
+			inputEvent(this, new InputEventArgs(InputState.HOLD,Input.mousePosition));
 		
-		if (Input.GetMouseButtonDown(1))	inputEvent(this, new InputEventArgs(InputState.DOUBLE_TOUCH,Input.mousePosition));
-//		if (Input.GetMouseButtonUp(0))		inputEvent(this, new InputEventArgs("左クリック終わり"));
-//		if (Input.GetMouseButtonUp(1))		inputEvent(this, new InputEventArgs("右クリック終わり"));
-//		if (Input.GetMouseButtonUp(2))		inputEvent(this, new InputEventArgs("ホイールクリック終わり"));
+		if (Input.GetMouseButtonDown(1))
+			inputEvent(this, new InputEventArgs(InputState.DOUBLE_TOUCH,Input.mousePosition));
 	}
 }
 
