@@ -23,8 +23,8 @@ public class ProgressRing : MonoBehaviour {
 		
 	}
 
-	public void updateDisplay(float second,float percent) {
-		_timer.text = Convert.ToString(Mathf.Ceil(second));
+	public void updateDisplay(string text,float percent) {
+		_timer.text = text;
 		_ring_over.fillAmount = percent;
 	}
 }

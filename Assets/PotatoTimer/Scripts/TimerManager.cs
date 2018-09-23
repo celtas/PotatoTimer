@@ -27,14 +27,36 @@ public class TimerManager : MonoBehaviour {
 
 	// タイマーの文字更新
 	void updateTimerDisplay() {
-		if (_countdown > 0)
-			_uiMinutes.text = Convert.ToString(Mathf.Ceil(_countdown/60)).PadLeft(2,'0');
-		else
+		//カウンタが0の時
+		if (_countdown < 0f) {
 			_uiMinutes.text = "00";
-		// 一桁の場合,左を0で埋める.
-		_uiSeconds.text = Convert.ToString(Mathf.Ceil(_countdown % 60)).PadLeft(2,'0');
+			_uiSeconds.text = "00";
+			_progressRings[0].updateDisplay("0",1f);
+			return;
+		}
+			
+		_uiMinutes.text = Convert.ToString(RoundMinutes(_countdown)).PadLeft(2,'0');
+		_uiSeconds.text = Convert.ToString(RoundSeconds(_countdown)).PadLeft(2,'0');
 		
-		_progressRings[0].updateDisplay(_countdown,1 - _countdown / _initTime);
+		_progressRings[0].updateDisplay(Convert.ToString(Math.Round(_countdown)),1 - _countdown / _initTime);
+	}
+	
+	// 秒を四捨五入するメソッド
+	int RoundSeconds(float seconds) {
+		seconds = seconds % 60;
+		
+		if (seconds > 59.5f || seconds < 0.5f)
+			return 0;
+		return (int) Math.Round(seconds);
+	}
+	// 分を四捨五入するメソッド
+	int RoundMinutes(float seconds) {
+		float remainder = _countdown % 60;
+		
+		if(remainder > 59.5f)
+			return (int) (Math.Floor(_countdown / 60)+1);
+		
+		return (int) Math.Floor(_countdown / 60);
 	}
 	
 	// Update is called once per frame
