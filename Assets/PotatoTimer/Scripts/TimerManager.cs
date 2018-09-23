@@ -30,7 +30,7 @@ public class TimerManager : MonoBehaviour {
 		if (_countdown > 0)
 			_uiMinutes.text = Convert.ToString(Mathf.Ceil(_countdown/60)).PadLeft(2,'0');
 		else
-			_uiMinutes.text = "0";
+			_uiMinutes.text = "00";
 		// 一桁の場合,左を0で埋める.
 		_uiSeconds.text = Convert.ToString(Mathf.Ceil(_countdown % 60)).PadLeft(2,'0');
 		
