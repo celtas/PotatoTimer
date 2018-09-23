@@ -24,7 +24,7 @@ public class ProgressRing : MonoBehaviour {
 	}
 
 	public void updateDisplay(float second,float percent) {
-		_timer.text = Convert.ToString((int) second);
+		_timer.text = Convert.ToString(Mathf.Ceil(second));
 		_ring_over.fillAmount = percent;
 	}
 }

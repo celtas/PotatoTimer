@@ -28,11 +28,11 @@ public class TimerManager : MonoBehaviour {
 	// タイマーの文字更新
 	void updateTimerDisplay() {
 		if (_countdown > 0)
-			_uiMinutes.text = Convert.ToString((int) Mathf.Floor(_countdown/60)).PadLeft(2,'0');
+			_uiMinutes.text = Convert.ToString(Mathf.Ceil(_countdown/60)).PadLeft(2,'0');
 		else
 			_uiMinutes.text = "0";
 		// 一桁の場合,左を0で埋める.
-		_uiSeconds.text = Convert.ToString((int) _countdown % 60).PadLeft(2,'0');
+		_uiSeconds.text = Convert.ToString(Mathf.Ceil(_countdown % 60)).PadLeft(2,'0');
 		
 		_progressRings[0].updateDisplay(_countdown,1 - _countdown / _initTime);
 	}
