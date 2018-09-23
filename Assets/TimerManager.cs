@@ -5,8 +5,6 @@ using TMPro;
 
 public class TimerManager : MonoBehaviour {
 	public ProgaressBar progress;
-	public GameObject[] backgrounds;
-	public GameObject[] canvass;
 	
 	[SerializeField] private float _countdown;
 	[SerializeField] private TextMeshProUGUI _uiMinutes;
@@ -19,22 +17,17 @@ public class TimerManager : MonoBehaviour {
 	private void Awake() {
 		_enableTimer = false;
 		_audioSource = gameObject.GetComponent<AudioSource>();
-		initScene();
 	}
 
 	public void StartTimer(int second) {
-		nextScene();
-		//音を止める
 		_audioSource.Stop();
-		//プログレスバーの有効化
-		progress.start(second);
 		_countdown = second;
 		_enableTimer = true;
 	}
 
 	// タイマーの文字更新
 	void updateTimerDisplay() {
-		if (_countdown <= 0)
+		if (_countdown > 0)
 			_uiMinutes.text = Convert.ToString((int) Mathf.Floor(_countdown/60));
 		else
 			_uiMinutes.text = "0";
@@ -59,19 +52,5 @@ public class TimerManager : MonoBehaviour {
 		_enableTimer = false;
 		_audioSource.clip = _soundPotato;
 		_audioSource.Play ();
-	}
-	
-	void nextScene() {
-		foreach (GameObject obj in backgrounds)
-			obj.SetActive(true);
-		foreach (GameObject obj in canvass)
-			obj.SetActive(false);
-	}
-
-	void initScene() {
-		foreach (GameObject obj in backgrounds)
-			obj.SetActive(false);
-		foreach (GameObject obj in canvass)
-			obj.SetActive(true);
 	}
 }

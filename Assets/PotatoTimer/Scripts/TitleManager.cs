@@ -21,9 +21,8 @@ public class TitleManager : MonoBehaviour {
 		if (e.State != InputState.SINGLE_TOUCH)
 			return;
 
-		foreach (GameObject sprite in sprites) {
+		foreach (GameObject sprite in sprites)
 			sprite.SetActive(false);
-		}
 
 		FrechflySpawner.instance.gameObject.SetActive(true);
 	}
