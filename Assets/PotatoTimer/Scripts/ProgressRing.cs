@@ -11,14 +11,11 @@ public class ProgressRing : MonoBehaviour {
 	private TextMeshProUGUI _timer;
 	[SerializeField]
 	private Image _ring,_ring_over;
-
 	// Use this for initialization
 	void Awake () {
-		_timer.text = "0";
 		_ring_over.fillAmount = 0;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		
 	}

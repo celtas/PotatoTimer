@@ -2,27 +2,67 @@
 using System.Timers;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TimerManager : MonoBehaviour {
 	[SerializeField] private float _countdown,_initTime;
-	[SerializeField] private TextMeshProUGUI _uiMinutes;
-	[SerializeField] private TextMeshProUGUI _uiSeconds;
+	[SerializeField] private TextMeshProUGUI _uiMinutes,_uiSeconds;
 	[SerializeField] private ProgressRing[] _progressRings;
+	[SerializeField] private CircleButton _btnStart, _btnPause, _btnResume,_btnCancel;
 	
 	private bool _enableTimer;
-	private AudioClip _soundPotato;
-	private AudioSource _audioSource;
+	[SerializeField] private AudioClip _soundPotato;
+	[SerializeField] private AudioSource _audioSource;
 	
-	private void Awake() {
-		_enableTimer = false;
-		_audioSource = gameObject.GetComponent<AudioSource>();
+	private void Start() {
+		registerListener();
+		setTimer(600);
+	}
+	void registerListener() {
+		_btnStart._eventReleased.AddListener(() => {
+			_btnStart.gameObject.SetActive(false);
+			_btnResume.gameObject.SetActive(false);
+			_btnPause.gameObject.SetActive(true);
+			_btnCancel.EnableButton();
+			
+			_audioSource.Stop();
+			_enableTimer = true;
+		});
+
+		_btnPause._eventReleased.AddListener(() => {
+			_btnStart.gameObject.SetActive(false);
+			_btnResume.gameObject.SetActive(true);
+			_btnPause.gameObject.SetActive(false);
+			_btnCancel.EnableButton();
+			
+			_enableTimer = false;
+		});
+
+		_btnResume._eventReleased.AddListener(() => {
+			_btnStart.gameObject.SetActive(true);
+			_btnResume.gameObject.SetActive(false);
+			_btnPause.gameObject.SetActive(false);
+			_btnCancel.DisableButton();
+			
+			_btnStart._eventReleased.InvokeSafe();
+		});
+		
+		_btnCancel._eventReleased.AddListener(() => {
+			_btnStart.gameObject.SetActive(true);
+			_btnResume.gameObject.SetActive(false);
+			_btnPause.gameObject.SetActive(false);
+			_btnCancel.DisableButton();
+			
+			_enableTimer = false;
+			setTimer(600);
+		});
 	}
 
-	public void StartTimer(int second) {
-		_audioSource.Stop();
+	public void setTimer(int second) {
+		_enableTimer = false;
 		_countdown = second;
 		_initTime = second;
-		_enableTimer = true;
+		updateTimerDisplay();
 	}
 
 	// タイマーの文字更新
