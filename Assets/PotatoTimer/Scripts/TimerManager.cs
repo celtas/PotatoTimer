@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class TimerManager : MonoBehaviour {
 	[SerializeField] private float _countdown,_initTime;
-	[SerializeField] private TextMeshProUGUI _uiMinutes,_uiSeconds;
+	[SerializeField] private TextMeshProUGUI _timeText;
 	[SerializeField] private ProgressRing[] _progressRings;
 	[SerializeField] private CircleButton _btnStart, _btnPause, _btnResume,_btnCancel;
 	
@@ -69,14 +69,13 @@ public class TimerManager : MonoBehaviour {
 	void updateTimerDisplay() {
 		//カウンタが0の時
 		if (_countdown < 0f) {
-			_uiMinutes.text = "00";
-			_uiSeconds.text = "00";
+			_timeText.text = "00 00";
 			_progressRings[0].updateDisplay("0",1f);
 			return;
 		}
 			
-		_uiMinutes.text = Convert.ToString(RoundMinutes(_countdown)).PadLeft(2,'0');
-		_uiSeconds.text = Convert.ToString(RoundSeconds(_countdown)).PadLeft(2,'0');
+		_timeText.text = Convert.ToString(RoundMinutes(_countdown)).PadLeft(2,'0') + " " + 
+		                 Convert.ToString(RoundSeconds(_countdown)).PadLeft(2,'0');
 		
 		_progressRings[0].updateDisplay(Convert.ToString(Math.Round(_countdown)),1 - _countdown / _initTime);
 	}
