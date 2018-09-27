@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Timers;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class TimerManager : MonoBehaviour {
 	[SerializeField] private float _countdown,_initTime;
@@ -16,6 +14,7 @@ public class TimerManager : MonoBehaviour {
 	
 	private void Start() {
 		registerListener();
+		_btnCancel.DisableButton();
 		setTimer(600);
 	}
 	void registerListener() {
@@ -53,7 +52,6 @@ public class TimerManager : MonoBehaviour {
 			_btnPause.gameObject.SetActive(false);
 			_btnCancel.DisableButton();
 			
-			_enableTimer = false;
 			setTimer(600);
 		});
 	}
