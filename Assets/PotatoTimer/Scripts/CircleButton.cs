@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class CircleButton : MonoBehaviour {
     [SerializeField]
     private Color _normalColor,_highlightedColor,_pressedColor,_releaseColor,_disableColor,_disableTextColor,_textColor;
-    public UnityEvent _eventPressed,_eventReleased,_eventOver,_eventEnter,_eventExit,_eventDisable,_eventEnable;
+    public UnityEvent eventPressed,eventClicked,_eventOver,eventEntered,eventExited,eventDisabled,eventEnabled;
 
     public bool enable = true;
     private Image[] _images;
@@ -18,32 +18,32 @@ public class CircleButton : MonoBehaviour {
         _images = GetComponentsInChildren<Image>();
         _texts = GetComponentsInChildren<TextMeshProUGUI>();
         foreach (Image image in _images) {
-            _eventPressed.AddListener(() => image.color = _pressedColor);
-            _eventReleased.AddListener(() => image.color = _releaseColor);
-            _eventEnter.AddListener(() => image.color = _highlightedColor);
-            _eventExit.AddListener(() => image.color = _normalColor);
-            _eventDisable.AddListener(() => image.color = _disableColor);
-            _eventEnable.AddListener(() => image.color = _normalColor);
+            eventPressed.AddListener(() => image.color = _pressedColor);
+            eventClicked.AddListener(() => image.color = _releaseColor);
+            eventEntered.AddListener(() => image.color = _highlightedColor);
+            eventExited.AddListener(() => image.color = _normalColor);
+            eventDisabled.AddListener(() => image.color = _disableColor);
+            eventEnabled.AddListener(() => image.color = _normalColor);
         }
         
-        _eventDisable.AddListener(() => enable = false);
-        _eventEnable.AddListener(() => enable = true);
+        eventDisabled.AddListener(() => enable = false);
+        eventEnabled.AddListener(() => enable = true);
 
         foreach (TextMeshProUGUI text in _texts) {
             // マウスオーバー時のテキスト色変更
-            _eventEnter.AddListener(() => text.color = _disableTextColor);
-            _eventExit.AddListener(() => text.color = _textColor);
+            eventEntered.AddListener(() => text.color = _disableTextColor);
+            eventExited.AddListener(() => text.color = _textColor);
             // ボタンの有効、無効化した時のテキスト色
-            _eventDisable.AddListener(() => text.color = _disableTextColor);
-            _eventEnable.AddListener(() => text.color = _textColor);
+            eventDisabled.AddListener(() => text.color = _disableTextColor);
+            eventEnabled.AddListener(() => text.color = _textColor);
         }
     }
     
     public void DisableButton() {
-        _eventDisable.InvokeSafe();
+        eventDisabled.InvokeSafe();
     }
     public void EnableButton() {
-        _eventEnable.InvokeSafe();
+        eventEnabled.InvokeSafe();
     }
 
     public void OnMouseOver() {
@@ -57,27 +57,27 @@ public class CircleButton : MonoBehaviour {
         if (!enable)
             return;
 
-        _eventEnter.InvokeSafe();
+        eventEntered.InvokeSafe();
     }
     
     public void OnMouseDown() {
         if (!enable)
             return;
 
-        _eventPressed.InvokeSafe();
+        eventPressed.InvokeSafe();
     }
 
     public void OnMouseUp() {
         if (!enable)
             return;
 
-        _eventReleased.InvokeSafe();
+        eventClicked.InvokeSafe();
     }
     
     public void OnMouseExit(){
         if (!enable)
             return;
 
-        _eventExit.InvokeSafe();
+        eventExited.InvokeSafe();
     }
 }

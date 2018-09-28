@@ -13,12 +13,14 @@ public class TimerManager : MonoBehaviour {
 	[SerializeField] private AudioSource _audioSource;
 	
 	private void Start() {
-		registerListener();
+		registerEventListener();
 		_btnCancel.DisableButton();
-		setTimer(600);
+		setTimer(5);
 	}
-	void registerListener() {
-		_btnStart._eventReleased.AddListener(() => {
+	
+	// アクションを登録
+	private void registerEventListener() {
+		_btnStart.eventClicked.AddListener(() => {
 			_btnStart.gameObject.SetActive(false);
 			_btnResume.gameObject.SetActive(false);
 			_btnPause.gameObject.SetActive(true);
@@ -28,7 +30,7 @@ public class TimerManager : MonoBehaviour {
 			_enableTimer = true;
 		});
 
-		_btnPause._eventReleased.AddListener(() => {
+		_btnPause.eventClicked.AddListener(() => {
 			_btnStart.gameObject.SetActive(false);
 			_btnResume.gameObject.SetActive(true);
 			_btnPause.gameObject.SetActive(false);
@@ -37,16 +39,16 @@ public class TimerManager : MonoBehaviour {
 			_enableTimer = false;
 		});
 
-		_btnResume._eventReleased.AddListener(() => {
+		_btnResume.eventClicked.AddListener(() => {
 			_btnStart.gameObject.SetActive(true);
 			_btnResume.gameObject.SetActive(false);
 			_btnPause.gameObject.SetActive(false);
 			_btnCancel.DisableButton();
 			
-			_btnStart._eventReleased.InvokeSafe();
+			_btnStart.eventClicked.InvokeSafe();
 		});
 		
-		_btnCancel._eventReleased.AddListener(() => {
+		_btnCancel.eventClicked.AddListener(() => {
 			_btnStart.gameObject.SetActive(true);
 			_btnResume.gameObject.SetActive(false);
 			_btnPause.gameObject.SetActive(false);
@@ -65,13 +67,6 @@ public class TimerManager : MonoBehaviour {
 
 	// タイマーの文字更新
 	void updateTimerDisplay() {
-		//カウンタが0の時
-		if (_countdown < 0f) {
-			_timeText.text = "00 00";
-			_progressRings[0].updateDisplay("0",1f);
-			return;
-		}
-			
 		_timeText.text = Convert.ToString(RoundMinutes(_countdown)).PadLeft(2,'0') + " " + 
 		                 Convert.ToString(RoundSeconds(_countdown)).PadLeft(2,'0');
 		
@@ -103,13 +98,15 @@ public class TimerManager : MonoBehaviour {
 			return;
 
 		_countdown -= Time.deltaTime;
-		updateTimerDisplay();
 		
 		if (_countdown <= 0)
 			complate();
+		
+		updateTimerDisplay();
 	}
 
 	void complate() {
+		_countdown = 0;
 		_enableTimer = false;
 		_audioSource.clip = _soundPotato;
 		_audioSource.Play ();
