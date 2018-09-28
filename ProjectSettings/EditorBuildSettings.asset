@@ -8,10 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/PotatoTimer/Scene/Title.unity
     guid: 3db389366e51a4b319dd1de80d8c47b4
-  - enabled: 1
+  - enabled: 0
     path: Assets/PotatoTimer/Scene/Main.unity
     guid: 91cf8c824a7f84de4bdd20be3b7cfe99
+  - enabled: 0
+    path: Assets/PotatoTimer/Scene/demo.unity
+    guid: a074da6cb78ba414aa59d3247d3efe81
   m_configObjects: {}
