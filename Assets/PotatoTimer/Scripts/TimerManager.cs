@@ -6,7 +6,7 @@ public class TimerManager : MonoBehaviour {
 	[SerializeField] private float _countdown,_initTime;
 	[SerializeField] private TextMeshProUGUI _timeText;
 	[SerializeField] private ProgressRing[] _progressRings;
-	[SerializeField] private CircleButton _btnStart, _btnPause, _btnResume,_btnCancel;
+	[SerializeField] private ImageButton _btnStart, _btnPause, _btnResume,_btnCancel;
 	
 	private bool _enableTimer;
 	[SerializeField] private AudioClip _soundPotato;
