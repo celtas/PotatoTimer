@@ -547,7 +547,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: "\u30BF\u30A4\u30DE1"
+  m_text: "\u30BF\u30A4\u30DE2"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 106422f4119544516b0b31f6a9821083, type: 2}
   m_sharedMaterial: {fileID: 21912139477040696, guid: 106422f4119544516b0b31f6a9821083,
@@ -884,6 +884,7 @@ GameObject:
   - component: {fileID: 116865402}
   - component: {fileID: 116865405}
   - component: {fileID: 116865404}
+  - component: {fileID: 116865403}
   m_Layer: 5
   m_Name: Menu4
   m_TagString: Untagged
@@ -910,7 +911,32 @@ RectTransform:
   m_AnchorMax: {x: 0.8, y: 0.11}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!61 &116865403
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 116865401}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 216, y: 211}
+  m_EdgeRadius: 0
 --- !u!114 &116865404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1238,6 +1264,7 @@ GameObject:
   - component: {fileID: 280207599}
   - component: {fileID: 280207602}
   - component: {fileID: 280207601}
+  - component: {fileID: 280207600}
   m_Layer: 5
   m_Name: Menu3
   m_TagString: Untagged
@@ -1264,7 +1291,32 @@ RectTransform:
   m_AnchorMax: {x: 0.6, y: 0.11}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!61 &280207600
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 280207598}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 216, y: 211}
+  m_EdgeRadius: 0
 --- !u!114 &280207601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1686,6 +1738,7 @@ GameObject:
   - component: {fileID: 585489224}
   - component: {fileID: 585489227}
   - component: {fileID: 585489226}
+  - component: {fileID: 585489225}
   m_Layer: 5
   m_Name: Menu2
   m_TagString: Untagged
@@ -1712,7 +1765,32 @@ RectTransform:
   m_AnchorMax: {x: 0.4, y: 0.11}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!61 &585489225
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 585489223}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 216, y: 211}
+  m_EdgeRadius: 0
 --- !u!114 &585489226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3889,7 +3967,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: "\u30BF\u30A4\u30DE1"
+  m_text: "\u8A2D\u5B9A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 106422f4119544516b0b31f6a9821083, type: 2}
   m_sharedMaterial: {fileID: 21912139477040696, guid: 106422f4119544516b0b31f6a9821083,
@@ -3926,7 +4004,7 @@ MonoBehaviour:
   m_fontStyle: 0
   m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
-  m_characterSpacing: -32.22
+  m_characterSpacing: -8.2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3958,7 +4036,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1257878184}
-    characterCount: 4
+    characterCount: 2
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -5023,7 +5101,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: "\u30BF\u30A4\u30DE1"
+  m_text: "\u30BF\u30A4\u30DE3"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 106422f4119544516b0b31f6a9821083, type: 2}
   m_sharedMaterial: {fileID: 21912139477040696, guid: 106422f4119544516b0b31f6a9821083,
@@ -5711,6 +5789,7 @@ GameObject:
   - component: {fileID: 1738548341}
   - component: {fileID: 1738548344}
   - component: {fileID: 1738548343}
+  - component: {fileID: 1738548342}
   m_Layer: 5
   m_Name: Menu5
   m_TagString: Untagged
@@ -5737,7 +5816,32 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 0.11}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!61 &1738548342
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1738548340}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 216, y: 211}
+  m_EdgeRadius: 0
 --- !u!114 &1738548343
 MonoBehaviour:
   m_ObjectHideFlags: 0

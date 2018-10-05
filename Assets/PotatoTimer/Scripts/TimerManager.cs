@@ -57,7 +57,11 @@ public class TimerManager : MonoBehaviour {
 			setTimer(600);
 		});
 	}
-
+	
+	public void clickFooterMenu(int index) {
+		Debug.Log(index);
+	}
+	
 	public void setTimer(int second) {
 		_enableTimer = false;
 		_countdown = second;

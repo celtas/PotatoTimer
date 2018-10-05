@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Security.Cryptography.X509Certificates;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -65,7 +66,7 @@ public class ImageButton : MonoBehaviour {
             eventEntered.AddListener(() => text.color = _highlightTextColor);
             eventExited.AddListener(() => text.color = _textColor);
             eventExited.AddListener(() => text.color = _textColor);
-            // ボタンの有効、無効化した時のテキスト色
+            // マウスオーバー時のテキスト色変更
             eventDisabled.AddListener(() => text.color = _disableTextColor);
             eventEnabled.AddListener(() => text.color = _textColor);
         }
