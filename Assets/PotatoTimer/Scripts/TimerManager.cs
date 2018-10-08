@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Timers;
+using FantomLib;
+using PotatoTimer.Scripts;
 using UnityEngine;
 using TMPro;
 
@@ -21,6 +23,25 @@ public class TimerManager : MonoBehaviour {
         _btnCancel.DisableButton();
         setTimer(2, 2, 2);
     }
+    
+    /*
+    private void invokeNative(){
+        AndroidJavaObject jo = new AndroidJavaObject("java.lang.String", "some string");
+        int hash = jo.Call<int>("hashCode");
+    
+        AndroidJavaClass unity = new AndroidJavaClass ("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject activity = unity.GetStatic<AndroidJavaObject> ("currentActivity");
+
+        activity.Call ("runOnUiThread", new AndroidJavaRunnable (() => {
+            AndroidJavaObject alertDialogBuilder = new AndroidJavaObject ("android.app.AlertDialog$Builder", activity);
+            alertDialogBuilder.Call<AndroidJavaObject> ("setMessage", "message");
+            alertDialogBuilder.Call<AndroidJavaObject> ("setCancelable", true);
+            alertDialogBuilder.Call<AndroidJavaObject> ("setPositiveButton", "OK", new PositiveButtonListner(this));
+            AndroidJavaObject dialog = alertDialogBuilder.Call<AndroidJavaObject> ("create");
+            dialog.Call ("show");
+        }));
+    }
+    */
 
     // アクションを登録
     private void registerEventListener() {

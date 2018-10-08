@@ -963,7 +963,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   eventClicked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: clickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   eventEntered:
@@ -1228,8 +1239,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821877b7bd7bb44189c1d5b49eca0f23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _countdown: 0
   _initTime: 0
+  _elapsedTime: 0
+  _separeteCountdown:
+  - 0
+  - 0
+  - 0
+  _separeteTime:
+  - 0
+  - 0
+  - 0
   _timeText: {fileID: 1169301486}
   _progressRings:
   - {fileID: 887101810}
@@ -1343,7 +1362,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   eventClicked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: clickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   eventEntered:
@@ -1817,7 +1847,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   eventClicked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: clickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   eventEntered:
@@ -3813,7 +3854,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   eventClicked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: clickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   eventEntered:
@@ -5044,6 +5096,11 @@ Prefab:
       propertyPath: m_enableAutoSizing
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114030929758577390, guid: c2136853e5c6a42da8a49e33974b48c7,
+        type: 2}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2136853e5c6a42da8a49e33974b48c7, type: 2}
   m_IsPrefabAsset: 0
@@ -5464,7 +5521,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 7f5b24cab21354d09bde533b9e5bb378, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 32a97720a09904a3e8946c042493ee86, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5868,7 +5925,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   eventClicked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: clickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   eventEntered:
@@ -6525,7 +6593,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: "\u30BF\u30A4\u30DE1"
+  m_text: "\u30BF\u30A4\u30DE4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 106422f4119544516b0b31f6a9821083, type: 2}
   m_sharedMaterial: {fileID: 21912139477040696, guid: 106422f4119544516b0b31f6a9821083,
