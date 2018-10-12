@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Timers;
-using FantomLib;
-using PotatoTimer.Scripts;
 using UnityEngine;
 using TMPro;
 
