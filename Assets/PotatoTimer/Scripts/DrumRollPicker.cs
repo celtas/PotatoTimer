@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class DrumRollPicker : MonoBehaviour {
-    [SerializeField] private GameObject[] _hours = new GameObject[5];
+    [SerializeField] 
+    private GameObject[] _hours = new GameObject[5];
     private RectTransform[] _hours_rect = new RectTransform[5];
     private TextMeshProUGUI[] _hours_text = new TextMeshProUGUI[5];
 
@@ -37,8 +39,11 @@ public class DrumRollPicker : MonoBehaviour {
     }
 
     void down() {
-        float anchorIncrement = -0.01f;
-        foreach (RectTransform rectTransform in _hours_rect) {
+        float anchorIncrement = -0.02f;
+        foreach (RectTransform rectTransform in _hours_rect.Reverse()) {
+            if (rectTransform.anchorMax.y + anchorIncrement < 0f)
+                return;
+            
             rectTransform.anchorMin = rectTransform.anchorMin + new Vector2(0, anchorIncrement);
             rectTransform.anchorMax = rectTransform.anchorMax + new Vector2(0, anchorIncrement);
 
@@ -47,8 +52,11 @@ public class DrumRollPicker : MonoBehaviour {
     }
 
     void up() {
-        float anchorIncrement = 0.01f;
+        float anchorIncrement = 0.02f;
         foreach (RectTransform rectTransform in _hours_rect) {
+            if (rectTransform.anchorMin.y + anchorIncrement > 1f)
+                return;
+            
             rectTransform.anchorMin = rectTransform.anchorMin + new Vector2(0, anchorIncrement);
             rectTransform.anchorMax = rectTransform.anchorMax + new Vector2(0, anchorIncrement);
 
