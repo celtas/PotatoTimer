@@ -50,12 +50,6 @@ public class DrumScrollRect : ScrollRect {
             return;
         
         float speed = velocity.y;
-
-
-        if (Mathf.Abs(speed) <= 0f) {
-            return;
-        }
-        
         Vector2 position = content.position;
         // 中心にもっとも近い要素を取得
         RectTransform rectNearest = contents.NearestY(centerRect.position.y);
