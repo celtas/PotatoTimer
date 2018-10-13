@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,6 +15,12 @@ public static class Util {
         var min = list.Min( c => Mathf.Abs( c - target ) );
         var o = list.First(c => Mathf.Abs(c - target) == min);
         return o;
+    }
+    
+    // targetに絶対値が近いRectTransformを返す
+    public static RectTransform NearestAbs(this IEnumerable<RectTransform> list, float target) {
+        float diff = list.Min( c => Math.Abs(-c.anchoredPosition.y - target));
+        return list.First(c => Math.Abs(-c.anchoredPosition.y - target) == diff);
     }
 
     // 自身を含めない子要素のコンポーネントを取得

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,14 +18,13 @@ public class DrumScrollRectEditor : Editor {
 }
 
 public class DrumScrollRect : ScrollRect {
-    private GameObject selectedGameObject;
+    public String selectedContentText;
+
     private RectTransform[] contents;
     private List<float> contents_anchoredPositionY;
 
     // m_Draggingがprivateでアクセスできない
     private bool dragging = false;
-
-    [SerializeField] private RectTransform contentRect;
 
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
@@ -46,22 +46,25 @@ public class DrumScrollRect : ScrollRect {
 
         if (!EditorApplication.isPlaying)
             return;
-
         if (dragging)
             return;
 
-        float contentHeight = contentRect.sizeDelta.y;
         Vector2 position = content.anchoredPosition;
-
-        float deltaTime = Time.unscaledDeltaTime;
-
         float speed = velocity.y;
+
+        // 一定の加速度以下になったら要素間の移動を補完する
         if (Mathf.Abs(speed) < 200f) {
-            base.velocity = Vector2.zero;
-            float nearest = contents_anchoredPositionY.NearestValue(position.y);
+            // Scroll View側の処理での移動を無効化
+            velocity = Vector2.zero;
+            RectTransform rectNearest = contents.NearestAbs(position.y);
+
             content.anchoredPosition = new Vector2(position.x,
-                Mathf.SmoothDamp(position.y, nearest, ref speed, elasticity, 50f, 0.05f));
+                Mathf.SmoothDamp(position.y, -rectNearest.anchoredPosition.y, ref speed, elasticity, 50f, 0.05f));
+
+            selectedContentText = rectNearest.gameObject.GetComponent<TextMeshProUGUI>().text;
         }
+
+        //Mathf.Abs(speed) > 1f
     }
 
     public override void OnScroll(PointerEventData eventData) {
