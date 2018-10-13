@@ -17,10 +17,10 @@ public static class Util {
         return o;
     }
     
-    // targetに絶対値が近いRectTransformを返す
-    public static RectTransform NearestAbs(this IEnumerable<RectTransform> list, float target) {
-        float diff = list.Min( c => Math.Abs(-c.anchoredPosition.y - target));
-        return list.First(c => Math.Abs(-c.anchoredPosition.y - target) == diff);
+    // 絶対座標のy値が最も近いRectTransformを返す
+    public static RectTransform NearestY(this IEnumerable<RectTransform> list, float positionY) {
+        float diff = list.Min( c => Math.Abs(c.position.y - positionY));
+        return list.First(c => Math.Abs(c.position.y - positionY) == diff);
     }
 
     // 自身を含めない子要素のコンポーネントを取得
