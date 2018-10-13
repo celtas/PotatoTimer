@@ -17,26 +17,26 @@ public class DrumScrollRectEditor : Editor {
 }
 
 public class DrumScrollRect : ScrollRect {
-    public String selectedContentText;
-    public RectTransform centerRect;
-
-    private RectTransform[] contents;
-
+    [SerializeField] private String _selectedContentText;
+    [SerializeField] private RectTransform _centerRect;
+    
+    private RectTransform[] _contents;
+    
     // m_Draggingがprivateでアクセスできない
-    private bool dragging;
+    private bool _dragging;
 
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
-        dragging = false;
+        _dragging = false;
     }
 
     public override void OnBeginDrag(PointerEventData eventData) {
         base.OnBeginDrag(eventData);
-        dragging = true;
+        _dragging = true;
     }
 
     public void Start() {
-        contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
+        _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
     }
 
     public void LateUpdate() {
@@ -44,22 +44,22 @@ public class DrumScrollRect : ScrollRect {
 
         if (!EditorApplication.isPlaying)
             return;
-        if (dragging)
+        if (_dragging)
             return;
         
         float speed = velocity.y;
         Vector2 position = content.position;
         // 中心にもっとも近い要素を取得
-        RectTransform rectNearest = contents.NearestY(centerRect.position.y);
+        RectTransform rectNearest = _contents.NearestY(_centerRect.position.y);
         
         // 選択されている要素のテキストを取得
-        selectedContentText = rectNearest.gameObject.GetComponent<TextMeshProUGUI>().text;
+        _selectedContentText = rectNearest.gameObject.GetComponent<TextMeshProUGUI>().text;
 
         // 一定の加速度以下になったら要素間の移動を補完する
         if (Mathf.Abs(speed) < 200f) {
             // Scroll View側の処理での移動を無効化
             velocity = Vector2.zero;
-            float delta = centerRect.position.y - rectNearest.position.y;
+            float delta = _centerRect.position.y - rectNearest.position.y;
                 
             content.position = new Vector2(position.x,
                 Mathf.SmoothDamp(position.y, position.y + delta, ref speed, elasticity, 50f, 0.05f));
@@ -68,5 +68,18 @@ public class DrumScrollRect : ScrollRect {
 
     public override void OnScroll(PointerEventData eventData) {
         base.OnScroll(eventData);
+    }
+
+    public string SelectedContentText {
+        get {
+            return _selectedContentText;
+        }
+        set {
+            RectTransform targetRect = _contents.FirstOrDefault(c => c.GetComponent<TextMeshProUGUI>().text.Equals(value));
+            
+            float delta = _centerRect.position.y - targetRect.position.y;
+            content.position = content.position + new Vector3(0, delta,0);
+            _selectedContentText = value;
+        }
     }
 }
