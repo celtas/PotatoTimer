@@ -21,10 +21,9 @@ public class DrumScrollRect : ScrollRect {
     public RectTransform centerRect;
 
     private RectTransform[] contents;
-    private List<float> contents_anchoredPositionY;
 
     // m_Draggingがprivateでアクセスできない
-    private bool dragging = false;
+    private bool dragging;
 
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
@@ -38,7 +37,6 @@ public class DrumScrollRect : ScrollRect {
 
     public void Start() {
         contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
-        contents_anchoredPositionY = contents.Select(x => -x.anchoredPosition.y).ToList();
     }
 
     public void LateUpdate() {
@@ -70,6 +68,5 @@ public class DrumScrollRect : ScrollRect {
 
     public override void OnScroll(PointerEventData eventData) {
         base.OnScroll(eventData);
-        Vector2 delta = eventData.scrollDelta;
     }
 }
