@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using TMPro;
 using UnityEditor;
@@ -82,4 +82,11 @@ public class DrumScrollRect : ScrollRect {
             _selectedContentText = value;
         }
     }
+    
+    #if UNITY_EDITOR
+        // ロールコンテンツが中央に来るように配置
+        protected override void OnValidate() {
+            content.localPosition = new Vector3(content.localPosition.x,-content.sizeDelta.y/2,content.localPosition.z);
+        }
+    #endif
 }
