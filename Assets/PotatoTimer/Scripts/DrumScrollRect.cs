@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using TMPro;
 using UnityEditor;
@@ -23,6 +23,9 @@ public class DrumScrollRect : ScrollRect {
 
     // m_Draggingがprivateでアクセスできない
     private bool _dragging;
+    private bool _scrolling;
+    // スクロールした後に移動補完を禁止する時間
+    private float _prohibitedTime;
 
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
@@ -43,9 +46,18 @@ public class DrumScrollRect : ScrollRect {
 
         if (!EditorApplication.isPlaying)
             return;
-        if (_dragging)
-            return;
 
+        // スクロールの処理
+        if (_prohibitedTime > 0f)
+            _prohibitedTime -= Time.deltaTime;
+        
+        if (_prohibitedTime < 0f)
+            _scrolling = false;
+        
+        // ドラッキング中、スクロール中は移動の補完をしない
+        if (_dragging || _scrolling)
+            return;
+        
         float speed = velocity.y;
         Vector2 position = content.position;
         // 中心にもっとも近い要素を取得
@@ -67,6 +79,9 @@ public class DrumScrollRect : ScrollRect {
 
     public override void OnScroll(PointerEventData eventData) {
         base.OnScroll(eventData);
+        
+        _scrolling = true;
+        _prohibitedTime = 0.3f;
     }
 
     public string SelectedContentText {
