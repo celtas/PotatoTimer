@@ -17,9 +17,11 @@ public class DrumScrollRectEditor : Editor {
 
 public class DrumScrollRect : ScrollRect {
     [SerializeField] private String _selectedContentText;
+    
     [SerializeField] private RectTransform _centerRect;
 
     private RectTransform[] _contents;
+    private float contentHeightHalf;
 
     // m_Draggingがprivateでアクセスできない
     private bool _dragging;
@@ -41,12 +43,16 @@ public class DrumScrollRect : ScrollRect {
         _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
     }
 
+    public void Start() {
+        contentHeightHalf = content.sizeDelta.y / 2f + 0.03f;
+    }
+
     public void LateUpdate() {
         base.LateUpdate();
 
         if (!EditorApplication.isPlaying)
             return;
-
+        
         // スクロールの処理
         if (_prohibitedTime > 0f)
             _prohibitedTime -= Time.deltaTime;
@@ -58,8 +64,14 @@ public class DrumScrollRect : ScrollRect {
         if (_dragging || _scrolling)
             return;
         
+        // 上下の要素をスクロールしすぎた時に弾性で戻る処理を優先させる
+        if (Mathf.Abs(content.localPosition.y) > contentHeightHalf)
+            return;
+        
+        // 継承元の要素を取得
         float speed = velocity.y;
         Vector2 position = content.position;
+        
         // 中心にもっとも近い要素を取得
         RectTransform rectNearest = _contents.NearestY(_centerRect.position.y);
 
