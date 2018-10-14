@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using TMPro;
 using UnityEditor;
@@ -26,8 +26,8 @@ public class DrumScrollRect : ScrollRect {
     // m_Draggingがprivateでアクセスできない
     private bool _dragging;
     private bool _scrolling;
-    // スクロールした後に移動補完を禁止する時間
-    private float _prohibitedTime;
+    // スクロールした後に移動補間を禁止する時間
+    private float _forbidedTime;
     
     // Updateした後のcontentの値
     private float _lastUpdatedContentPosY;
@@ -56,44 +56,53 @@ public class DrumScrollRect : ScrollRect {
 
         if (!EditorApplication.isPlaying)
             return;
+        
+        // 中心にもっとも近い要素を取得
+        RectTransform nearestRect = _contents.NearestY(_centerRect.position.y);
+        // 選択されている(ドラムの中心にある)要素を取得
+        _selectedContentText = nearestRect.gameObject.GetComponent<TextMeshProUGUI>().text;
 
+        // ドラッグ中やスクロール中、コンテンツが動いていない時、弾性力の影響下にある時
+        // 以外であれば、移動補間の処理を行う
+        if (isAllowedToMovement())
+            interpolateDrumMovement(nearestRect);
+    }
+
+    private bool isAllowedToMovement() {
         // 動いていない時にUpdateを呼ばないための処理
         if (_lastUpdatedContentPosY == content.position.y) {
             if (_elapsedTime > 1f)
-                return;
+                return false;
             _elapsedTime += Time.deltaTime;
         }
         else {
             _elapsedTime = 0;
         }
 
-        // ドラッキング中、スクロール中は移動の補完をしない
-        if (_prohibitedTime > 0f)
-            _prohibitedTime -= Time.deltaTime;
-        if (_prohibitedTime < 0f)
+        // ドラッキング中、スクロール中は移動の補間をしない
+        if (_forbidedTime > 0f)
+            _forbidedTime -= Time.deltaTime;
+        if (_forbidedTime < 0f)
             _scrolling = false;
         if (_dragging || _scrolling)
-            return;
+            return false;
         
         // 上下の要素をスクロールしすぎた時に弾性で戻る処理を優先させる
         if (Mathf.Abs(content.localPosition.y) > contentHeightHalf)
-            return;
-        
-        // 継承元の要素を取得
+            return false;
+
+        return true;
+    }
+
+    private void interpolateDrumMovement(RectTransform nearestRect) {
         float speed = velocity.y;
         Vector2 position = content.position;
-        
-        // 中心にもっとも近い要素を取得
-        RectTransform rectNearest = _contents.NearestY(_centerRect.position.y);
 
-        // 選択されている要素のテキストを取得
-        _selectedContentText = rectNearest.gameObject.GetComponent<TextMeshProUGUI>().text;
-
-        // 一定の加速度以下になったら要素間の移動を補完する
+        // 一定の加速度以下になったら要素間の移動を補間する
         if (Mathf.Abs(speed) < 100f) {
             // Scroll View側の処理での移動を無効化
             velocity = Vector2.zero;
-            float delta = _centerRect.position.y - rectNearest.position.y;
+            float delta = _centerRect.position.y - nearestRect.position.y;
 
             content.position = new Vector2(position.x,
                 Mathf.SmoothDamp(position.y, position.y + delta, ref speed, elasticity, 100f, 0.1f));
@@ -107,7 +116,7 @@ public class DrumScrollRect : ScrollRect {
         base.OnScroll(eventData);
         
         _scrolling = true;
-        _prohibitedTime = 0.1f;
+        _forbidedTime = 0.1f;
     }
 
     public string SelectedContentText {
