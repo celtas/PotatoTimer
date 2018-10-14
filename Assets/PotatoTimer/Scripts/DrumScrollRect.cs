@@ -28,6 +28,10 @@ public class DrumScrollRect : ScrollRect {
     private bool _scrolling;
     // スクロールした後に移動補完を禁止する時間
     private float _prohibitedTime;
+    
+    // Updateした後のcontentの値
+    private float _lastUpdatedContentPosY;
+    private float _elapsedTime;
 
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
@@ -52,15 +56,22 @@ public class DrumScrollRect : ScrollRect {
 
         if (!EditorApplication.isPlaying)
             return;
-        
-        // スクロールの処理
+
+        // 動いていない時にUpdateを呼ばないための処理
+        if (_lastUpdatedContentPosY == content.position.y) {
+            if (_elapsedTime > 1f)
+                return;
+            _elapsedTime += Time.deltaTime;
+        }
+        else {
+            _elapsedTime = 0;
+        }
+
+        // ドラッキング中、スクロール中は移動の補完をしない
         if (_prohibitedTime > 0f)
             _prohibitedTime -= Time.deltaTime;
-        
         if (_prohibitedTime < 0f)
             _scrolling = false;
-        
-        // ドラッキング中、スクロール中は移動の補完をしない
         if (_dragging || _scrolling)
             return;
         
@@ -79,21 +90,24 @@ public class DrumScrollRect : ScrollRect {
         _selectedContentText = rectNearest.gameObject.GetComponent<TextMeshProUGUI>().text;
 
         // 一定の加速度以下になったら要素間の移動を補完する
-        if (Mathf.Abs(speed) < 200f) {
+        if (Mathf.Abs(speed) < 100f) {
             // Scroll View側の処理での移動を無効化
             velocity = Vector2.zero;
             float delta = _centerRect.position.y - rectNearest.position.y;
 
             content.position = new Vector2(position.x,
-                Mathf.SmoothDamp(position.y, position.y + delta, ref speed, elasticity, 50f, 0.05f));
+                Mathf.SmoothDamp(position.y, position.y + delta, ref speed, elasticity, 100f, 0.1f));
         }
+        
+        // 止まっている時にUpdateを呼ばないための処理
+        _lastUpdatedContentPosY = content.position.y;
     }
 
     public override void OnScroll(PointerEventData eventData) {
         base.OnScroll(eventData);
         
         _scrolling = true;
-        _prohibitedTime = 0.3f;
+        _prohibitedTime = 0.1f;
     }
 
     public string SelectedContentText {
