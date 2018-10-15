@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -17,22 +19,26 @@ public class DrumScrollRectEditor : Editor {
 
 public class DrumScrollRect : ScrollRect {
     [SerializeField] private String _selectedContentText;
-    
-    [SerializeField] private RectTransform _centerRect;
 
+    [SerializeField] private RectTransform _centerRect;
     private RectTransform[] _contents;
+    
+    private float contentSizeDeltaHalf;
     private float contentHeightHalf;
 
     // m_Draggingがprivateでアクセスできない
     private bool _dragging;
     private bool _scrolling;
+
     // スクロールした後に移動補間を禁止する時間
     private float _forbidedTime;
-    
+
     // Updateした後のcontentの値
     private float _lastUpdatedContentPosY;
     private float _elapsedTime;
 
+    private RectTransform drumRect;
+    
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
         _dragging = false;
@@ -48,24 +54,38 @@ public class DrumScrollRect : ScrollRect {
     }
 
     public void Start() {
-        contentHeightHalf = content.sizeDelta.y / 2f + 0.03f;
+        contentSizeDeltaHalf = content.sizeDelta.y / 2f + 0.03f;
+        drumRect = gameObject.transform.GetComponent<RectTransform>();
+        contentHeightHalf = (content.rect.height - content.sizeDelta.y)/2f;
     }
 
-    public void LateUpdate() {
-        base.LateUpdate();
-
+    private void FixedUpdate() {
         if (!EditorApplication.isPlaying)
             return;
-        
+
+        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+            Debug.Log(content.anchorMax);
+            Debug.Log(content.anchorMin);
+        }
+
         // 中心にもっとも近い要素を取得
         RectTransform nearestRect = _contents.NearestY(_centerRect.position.y);
+        // ドラムロールを再現するためにscale値を変更
+        List<RectTransform> rollContents = getRollContentsOnDrum(nearestRect,4);
+        rollContents.ForEach(scaleRollContent);
         // 選択されている(ドラムの中心にある)要素を取得
         _selectedContentText = nearestRect.gameObject.GetComponent<TextMeshProUGUI>().text;
 
         // ドラッグ中やスクロール中、コンテンツが動いていない時、弾性力の影響下にある時
-        // 以外であれば、移動補間の処理を行う
-        if (isAllowedToMovement())
-            interpolateDrumMovement(nearestRect);
+        // は移動補間の処理を中断する
+        if (!isAllowedToMovement())
+            return;
+        
+        interpolateDrumMovement(nearestRect);
+    }
+
+    public void LateUpdate() {
+        base.LateUpdate();
     }
 
     private bool isAllowedToMovement() {
@@ -86,12 +106,45 @@ public class DrumScrollRect : ScrollRect {
             _scrolling = false;
         if (_dragging || _scrolling)
             return false;
-        
+
         // 上下の要素をスクロールしすぎた時に弾性で戻る処理を優先させる
-        if (Mathf.Abs(content.localPosition.y) > contentHeightHalf)
+        if (Mathf.Abs(content.localPosition.y) > contentSizeDeltaHalf)
             return false;
 
         return true;
+    }
+
+    public List<RectTransform> getRollContentsOnDrum(RectTransform rollContent, int searchRange) {
+        List<RectTransform> rollContents = new List<RectTransform>();
+        
+        // ロール中心のコンテンツindexを取得
+        int index = Array.IndexOf(_contents, rollContent);
+        if (index == -1)
+            return rollContents;
+
+        // 中心の要素のscaleを調整
+        rollContents.Add(rollContent);
+        // 上下3つの要素のScaleを調整
+        for (int range = 1; range <= searchRange; range++) {
+            rollContent = _contents.ElementAtOrDefault(index + range);
+            if (rollContent != null)
+                rollContents.Add(rollContent);
+
+            rollContent = _contents.ElementAtOrDefault(index - range);
+            if (rollContent != null)
+                rollContents.Add(rollContent);
+        }
+
+        return rollContents;
+    }
+
+    public void scaleRollContent(RectTransform rectTransform) {
+        float distance = Mathf.Abs(_centerRect.position.y - rectTransform.position.y);
+        float scale = (contentHeightHalf - distance) / contentHeightHalf;
+        if (scale < 0f)
+            return;
+        
+        rectTransform.localScale = new Vector3(rectTransform.localScale.x, Mathf.Sqrt(scale), rectTransform.localScale.z);
     }
 
     private void interpolateDrumMovement(RectTransform nearestRect) {
@@ -107,22 +160,23 @@ public class DrumScrollRect : ScrollRect {
             content.position = new Vector2(position.x,
                 Mathf.SmoothDamp(position.y, position.y + delta, ref speed, elasticity, 100f, 0.1f));
         }
-        
+
         // 止まっている時にUpdateを呼ばないための処理
         _lastUpdatedContentPosY = content.position.y;
     }
 
     public override void OnScroll(PointerEventData eventData) {
         base.OnScroll(eventData);
-        
+
         _scrolling = true;
-        _forbidedTime = 0.1f;
+        _forbidedTime = 0.25f;
     }
 
     public string SelectedContentText {
         get { return _selectedContentText; }
         set {
-            RectTransform targetRect =　_contents.FirstOrDefault(c => c.GetComponent<TextMeshProUGUI>().text.Equals(value));
+            RectTransform targetRect =
+                _contents.FirstOrDefault(c => c.GetComponent<TextMeshProUGUI>().text.Equals(value));
 
             if (targetRect == null)
                 return;
@@ -132,11 +186,11 @@ public class DrumScrollRect : ScrollRect {
             _selectedContentText = value;
         }
     }
-    
-    #if UNITY_EDITOR
-        // ロールコンテンツが中央に来るように配置
-        protected override void OnValidate() {
-            content.localPosition = new Vector3(content.localPosition.x,-content.sizeDelta.y/2,content.localPosition.z);
-        }
-    #endif
+
+#if UNITY_EDITOR
+    // ロールコンテンツが中央に来るように配置
+    protected override void OnValidate() {
+        content.localPosition = new Vector3(content.localPosition.x, -content.sizeDelta.y / 2, content.localPosition.z);
+    }
+#endif
 }
