@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -59,7 +59,9 @@ public class DrumScrollRect : ScrollRect {
         contentHeightHalf = (content.rect.height - content.sizeDelta.y)/2f;
     }
 
-    private void FixedUpdate() {
+    private void LateUpdate() {
+        base.LateUpdate();
+        
         if (!EditorApplication.isPlaying)
             return;
 
