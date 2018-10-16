@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -63,29 +63,23 @@ public class DrumScrollRect : ScrollRect {
         if (!EditorApplication.isPlaying)
             return;
 
-        if (Input.GetKeyDown(KeyCode.UpArrow)) {
-            Debug.Log(content.anchorMax);
-            Debug.Log(content.anchorMin);
-        }
-
         // 中心にもっとも近い要素を取得
         RectTransform nearestRect = _contents.NearestY(_centerRect.position.y);
-        // ドラムロールを再現するためにscale値を変更
-        List<RectTransform> rollContents = getRollContentsOnDrum(nearestRect,4);
-        rollContents.ForEach(scaleRollContent);
+        
         // 選択されている(ドラムの中心にある)要素を取得
         _selectedContentText = nearestRect.gameObject.GetComponent<TextMeshProUGUI>().text;
+        
+        // ドラムロールを再現するためにscale値を変更
+        List<RectTransform> rollContents = getRollContentsOnDrum(nearestRect,3);
+        rollContents.ForEach(scaleRollContent);
 
         // ドラッグ中やスクロール中、コンテンツが動いていない時、弾性力の影響下にある時
         // は移動補間の処理を中断する
         if (!isAllowedToMovement())
             return;
         
+        // コンテンツ間の移動を補間する
         interpolateDrumMovement(nearestRect);
-    }
-
-    public void LateUpdate() {
-        base.LateUpdate();
     }
 
     private bool isAllowedToMovement() {
@@ -140,11 +134,14 @@ public class DrumScrollRect : ScrollRect {
 
     public void scaleRollContent(RectTransform rectTransform) {
         float distance = Mathf.Abs(_centerRect.position.y - rectTransform.position.y);
-        float scale = (contentHeightHalf - distance) / contentHeightHalf;
-        if (scale < 0f)
-            return;
+        float axis_x = distance / contentHeightHalf;
         
-        rectTransform.localScale = new Vector3(rectTransform.localScale.x, Mathf.Sqrt(scale), rectTransform.localScale.z);
+        if (axis_x > 1f)
+            axis_x = 1;
+
+        float axis_y = Mathf.Sqrt(1f - axis_x * axis_x);
+        
+        rectTransform.localScale = new Vector3(rectTransform.localScale.x, axis_y, rectTransform.localScale.z);
     }
 
     private void interpolateDrumMovement(RectTransform nearestRect) {
