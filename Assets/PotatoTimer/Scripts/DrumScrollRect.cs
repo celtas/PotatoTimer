@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -53,10 +54,13 @@ public class DrumScrollRect : ScrollRect {
         _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
     }
 
-    public void Start() {
+    IEnumerator Start () {
+        yield return null;
         contentSizeDeltaHalf = content.sizeDelta.y / 2f + 0.03f;
         drumRect = gameObject.transform.GetComponent<RectTransform>();
         contentHeightHalf = (content.rect.height - content.sizeDelta.y)/2f;
+        
+        content.localPosition = new Vector3(content.localPosition.x, -content.sizeDelta.y / 2, content.localPosition.z);
     }
 
     private void LateUpdate() {
@@ -67,7 +71,7 @@ public class DrumScrollRect : ScrollRect {
 
         // 中心にもっとも近い要素を取得
         RectTransform nearestRect = _contents.NearestY(_centerRect.position.y);
-        
+
         // 選択されている(ドラムの中心にある)要素を取得
         _selectedContentText = nearestRect.gameObject.GetComponent<TextMeshProUGUI>().text;
         
@@ -174,22 +178,14 @@ public class DrumScrollRect : ScrollRect {
     public string SelectedContentText {
         get { return _selectedContentText; }
         set {
-            RectTransform targetRect =
-                _contents.FirstOrDefault(c => c.GetComponent<TextMeshProUGUI>().text.Equals(value));
+            RectTransform targetRect = _contents.FirstOrDefault(c => c.GetComponent<TextMeshProUGUI>().text.Equals(value));
 
             if (targetRect == null)
                 return;
-
+            
             float delta = _centerRect.position.y - targetRect.position.y;
             content.position = content.position + new Vector3(0, delta, 0);
             _selectedContentText = value;
         }
     }
-
-#if UNITY_EDITOR
-    // ロールコンテンツが中央に来るように配置
-    protected override void OnValidate() {
-        content.localPosition = new Vector3(content.localPosition.x, -content.sizeDelta.y / 2, content.localPosition.z);
-    }
-#endif
 }

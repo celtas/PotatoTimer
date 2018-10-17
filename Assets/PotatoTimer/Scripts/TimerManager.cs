@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using TMPro;
 
 public class TimerManager : MonoBehaviour {
+    public TimePicker timePicker;
+
     [SerializeField] private float _initTime, _elapsedTime;
     [SerializeField] private float[] _separeteCountdown = new float[3];
     [SerializeField] private float[] _separeteTime = new float[3];
@@ -15,12 +18,13 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private AudioClip _soundPotato;
     [SerializeField] private AudioSource _audioSource;
 
-    private void Start() {
+    IEnumerator Start () {
+        yield return new WaitForEndOfFrame();
         registerEventListener();
         _btnCancel.DisableButton();
         setTimer(2, 2, 2);
     }
-    
+
     /*
     private void invokeNative(){
         AndroidJavaObject jo = new AndroidJavaObject("java.lang.String", "some string");
@@ -82,6 +86,7 @@ public class TimerManager : MonoBehaviour {
 
     // フッターメニュー
     public void clickFooterMenu(int index) {
+        setTimer(2, 2, 2);
         Debug.Log(index);
     }
 
@@ -94,6 +99,8 @@ public class TimerManager : MonoBehaviour {
         _enableTimer = false;
         _initTime = Countdown;
         updateTimerDisplay();
+
+        timePicker.setTime(second1);
     }
 
     // タイマーの文字更新
@@ -101,8 +108,9 @@ public class TimerManager : MonoBehaviour {
         _timeText.text = Convert.ToString(RoundMinutes(Countdown)).PadLeft(2, '0') + " " +
                          Convert.ToString(RoundSeconds(Countdown)).PadLeft(2, '0');
 
-        for(int i = 0; i < _separeteCountdown.Length; i++)
-            _progressRings[i].updateDisplay(Convert.ToString(Math.Round(_separeteCountdown[i])), (_separeteTime[i] - _separeteCountdown[i]) / _separeteTime[i]);
+        for (int i = 0; i < _separeteCountdown.Length; i++)
+            _progressRings[i].updateDisplay(Convert.ToString(Math.Round(_separeteCountdown[i])),
+                (_separeteTime[i] - _separeteCountdown[i]) / _separeteTime[i]);
     }
 
     // 秒を四捨五入するメソッド
@@ -148,11 +156,12 @@ public class TimerManager : MonoBehaviour {
             _separeteCountdown[i] -= remainder;
             if (_separeteCountdown[i] >= 0)
                 break;
-            
+
             remainder = -_separeteCountdown[i];
             _separeteCountdown[i] = 0;
-            
+
         }
+
         _elapsedTime = _initTime - Countdown;
     }
 
@@ -165,10 +174,8 @@ public class TimerManager : MonoBehaviour {
         _audioSource.clip = _soundPotato;
         _audioSource.Play();
     }
-    
+
     public float Countdown {
-        get {
-            return _separeteCountdown.Sum();
-        }
+        get { return _separeteCountdown.Sum(); }
     }
 }
