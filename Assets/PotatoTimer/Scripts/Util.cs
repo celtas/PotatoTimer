@@ -9,6 +9,11 @@ public static class Util {
         if (action != null)
             action.Invoke();
     }
+    
+    public static void InvokeSafe(this Action action) {
+        if (action != null)
+            action.Invoke();
+    }
 
     // targetに近い値を返す
     public static float NearestValue(this IEnumerable<float> list, float target) {
