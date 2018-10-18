@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -14,16 +14,42 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private ProgressRing[] _progressRings;
     [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton;
     [SerializeField] private GameObject _timeDisplay, _timePicker, _cancelButtons, _playButtons;
-    private Action _showTimerAction,_showPickerAction;
+    private Action _showTimer, _showPicker,_hiddenTimerAndPicker;
+
+    [SerializeField] private BottomAreaDisplayType _displayType = BottomAreaDisplayType.HIDDEN;
 
     private bool _enable;
     [SerializeField] private AudioClip _soundPotato;
     [SerializeField] private AudioSource _audioSource;
 
-    IEnumerator Start () {
-        yield return new WaitForEndOfFrame();
+    /// <summary>
+    ///   <para>ボトムエリアの状態</para>
+    /// </summary>
+    public BottomAreaDisplayType displayType {
+        get { return _displayType; }
+        set {
+            switch (_displayType) {
+                case BottomAreaDisplayType.HIDDEN:
+                    _hiddenTimerAndPicker.InvokeSafe();
+                    break;
+                case BottomAreaDisplayType.TIMER:
+                    _showTimer.InvokeSafe();
+                    break;
+                case BottomAreaDisplayType.PICKER:
+                    _showPicker.InvokeSafe();
+                    break;
+            }
+            _displayType = value;
+        }
+    }
+
+    private void Awake() {
         registerEventListener();
-        _cancelButton.DisableButton();
+        displayType = BottomAreaDisplayType.HIDDEN;
+    }
+
+    IEnumerator Start() {
+        yield return new WaitForEndOfFrame();
         setTimer(2, 2, 2);
     }
 
@@ -85,25 +111,45 @@ public class TimerManager : MonoBehaviour {
             setTimer(200, 200, 200);
         });
 
-        _showTimerAction = () => {
+        _showTimer = () => {
             _cancelButtons.SetActive(true);
             _playButtons.SetActive(true);
 
             _timePicker.SetActive(false);
             _timeDisplay.SetActive(true);
         };
-        _showPickerAction = () => {
+        _showPicker = () => {
             _cancelButtons.SetActive(false);
             _playButtons.SetActive(false);
 
             _timePicker.SetActive(true);
             _timeDisplay.SetActive(false);
         };
+        _hiddenTimerAndPicker = () => {
+            _cancelButtons.SetActive(false);
+            _playButtons.SetActive(false);
+
+            _timePicker.SetActive(false);
+            _timeDisplay.SetActive(false);
+        };
     }
 
     // フッターメニュー
     public void clickFooterMenu(int index) {
-        setTimer(2, 2, 2);
+        switch (index) {
+            case 0:
+                setTimer(2, 2, 2);
+                break;
+            case 1:
+                _showPicker.InvokeSafe();
+                break;
+            case 2:
+                _showTimer.InvokeSafe();
+                break;
+            default:
+                break;
+        }
+
         Debug.Log(index);
     }
 
@@ -117,7 +163,7 @@ public class TimerManager : MonoBehaviour {
         _initTime = Countdown;
         updateTimerDisplay();
 
-        timePicker.setTime(second1);
+        displayType = BottomAreaDisplayType.TIMER;
     }
 
     // タイマーの文字更新
@@ -176,7 +222,6 @@ public class TimerManager : MonoBehaviour {
 
             remainder = -_separeteCountdown[i];
             _separeteCountdown[i] = 0;
-
         }
 
         _elapsedTime = _initTime - Countdown;
@@ -194,5 +239,20 @@ public class TimerManager : MonoBehaviour {
 
     public float Countdown {
         get { return _separeteCountdown.Sum(); }
+    }
+
+    public enum BottomAreaDisplayType {
+        /// <summary>
+        ///   <para>タイマーを表示する。ボタンは表示</para>
+        /// </summary>
+        HIDDEN,
+        /// <summary>
+        ///   <para>タイマーを表示する。ボタンは表示</para>
+        /// </summary>
+        TIMER,
+        /// <summary>
+        ///   <para>タイムピッカーを表示する。ボタンは非表示</para>
+        /// </summary>
+        PICKER,
     }
 }
