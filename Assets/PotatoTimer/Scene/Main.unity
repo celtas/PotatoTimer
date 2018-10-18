@@ -274,7 +274,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -2965.9177}
+  m_AnchoredPosition: {x: 0, y: -2966.201}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &10448775
@@ -690,7 +690,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 7.275958e-12}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0.00012207031}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &50607642
@@ -3269,7 +3269,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -4139,15 +4139,14 @@ MonoBehaviour:
   - {fileID: 887101810}
   - {fileID: 1264787789}
   - {fileID: 30739164}
-  _startButton: {fileID: 0}
-  _pauseButton: {fileID: 0}
-  _resumeButton: {fileID: 0}
-  _cancelButton: {fileID: 0}
-  _timeDisplay: {fileID: 0}
-  _timePicker: {fileID: 0}
-  _cancelButtons: {fileID: 0}
-  _playButtons: {fileID: 0}
-  _: {fileID: 0}
+  _startButton: {fileID: 259933381}
+  _pauseButton: {fileID: 1602048686}
+  _resumeButton: {fileID: 1379565816}
+  _cancelButton: {fileID: 1448698749}
+  _timeDisplay: {fileID: 648161591}
+  _timePicker: {fileID: 2125092266}
+  _cancelButtons: {fileID: 1448698746}
+  _playButtons: {fileID: 1691848159}
   _soundPotato: {fileID: 8300000, guid: a175aa6a4c40441af9b69c848c73769a, type: 3}
   _audioSource: {fileID: 250317374}
 --- !u!4 &250317376
@@ -9259,7 +9258,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 7.275958e-12}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0.00012207031}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &639302424
@@ -17238,7 +17237,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -26665,7 +26664,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -2965.9177}
+  m_AnchoredPosition: {x: 0, y: -2966.201}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1743308930
@@ -30984,7 +30983,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.16614816, y: 0.2655861}
   m_AnchorMax: {x: 0.8333158, y: 0.2655861}
-  m_AnchoredPosition: {x: 0, y: 3.637979e-12}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -0.000061035156, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2030201586
@@ -31305,7 +31304,7 @@ MonoBehaviour:
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -31840,7 +31839,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -1156.1962}
+  m_AnchoredPosition: {x: 0, y: -1156.4802}
   m_SizeDelta: {x: -29.5354, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2086096072
@@ -32766,8 +32765,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1, y: -449.45}
-  m_SizeDelta: {x: 950, y: 500.35}
+  m_AnchoredPosition: {x: 0, y: -450}
+  m_SizeDelta: {x: 800, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2125092268
 MonoBehaviour:

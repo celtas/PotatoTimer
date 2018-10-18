@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -12,16 +12,18 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private float[] _separeteTime = new float[3];
     [SerializeField] private TextMeshProUGUI _timeText;
     [SerializeField] private ProgressRing[] _progressRings;
-    [SerializeField] private ImageButton _btnStart, _btnPause, _btnResume, _btnCancel;
+    [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton;
+    [SerializeField] private GameObject _timeDisplay, _timePicker, _cancelButtons, _playButtons;
+    private Action _showTimerAction,_showPickerAction;
 
-    private bool _enableTimer;
+    private bool _enable;
     [SerializeField] private AudioClip _soundPotato;
     [SerializeField] private AudioSource _audioSource;
 
     IEnumerator Start () {
         yield return new WaitForEndOfFrame();
         registerEventListener();
-        _btnCancel.DisableButton();
+        _cancelButton.DisableButton();
         setTimer(2, 2, 2);
     }
 
@@ -44,44 +46,59 @@ public class TimerManager : MonoBehaviour {
     }
     */
 
-    // アクションを登録
+    // ゲームオブジェクトの状態を操作するアクションを登録
     private void registerEventListener() {
-        _btnStart.eventClicked.AddListener(() => {
-            _btnStart.gameObject.SetActive(false);
-            _btnResume.gameObject.SetActive(false);
-            _btnPause.gameObject.SetActive(true);
-            _btnCancel.EnableButton();
+        _startButton.eventClicked.AddListener(() => {
+            _startButton.gameObject.SetActive(false);
+            _resumeButton.gameObject.SetActive(false);
+            _pauseButton.gameObject.SetActive(true);
+            _cancelButton.EnableButton();
 
             _audioSource.Stop();
-            _enableTimer = true;
+            _enable = true;
         });
 
-        _btnPause.eventClicked.AddListener(() => {
-            _btnStart.gameObject.SetActive(false);
-            _btnResume.gameObject.SetActive(true);
-            _btnPause.gameObject.SetActive(false);
-            _btnCancel.EnableButton();
+        _pauseButton.eventClicked.AddListener(() => {
+            _startButton.gameObject.SetActive(false);
+            _resumeButton.gameObject.SetActive(true);
+            _pauseButton.gameObject.SetActive(false);
+            _cancelButton.EnableButton();
 
-            _enableTimer = false;
+            _enable = false;
         });
 
-        _btnResume.eventClicked.AddListener(() => {
-            _btnStart.gameObject.SetActive(true);
-            _btnResume.gameObject.SetActive(false);
-            _btnPause.gameObject.SetActive(false);
-            _btnCancel.DisableButton();
+        _resumeButton.eventClicked.AddListener(() => {
+            _startButton.gameObject.SetActive(true);
+            _resumeButton.gameObject.SetActive(false);
+            _pauseButton.gameObject.SetActive(false);
+            _cancelButton.DisableButton();
 
-            _btnStart.eventClicked.InvokeSafe();
+            _startButton.eventClicked.InvokeSafe();
         });
 
-        _btnCancel.eventClicked.AddListener(() => {
-            _btnStart.gameObject.SetActive(true);
-            _btnResume.gameObject.SetActive(false);
-            _btnPause.gameObject.SetActive(false);
-            _btnCancel.DisableButton();
+        _cancelButton.eventClicked.AddListener(() => {
+            _startButton.gameObject.SetActive(true);
+            _resumeButton.gameObject.SetActive(false);
+            _pauseButton.gameObject.SetActive(false);
+            _cancelButton.DisableButton();
 
             setTimer(200, 200, 200);
         });
+
+        _showTimerAction = () => {
+            _cancelButtons.SetActive(true);
+            _playButtons.SetActive(true);
+
+            _timePicker.SetActive(false);
+            _timeDisplay.SetActive(true);
+        };
+        _showPickerAction = () => {
+            _cancelButtons.SetActive(false);
+            _playButtons.SetActive(false);
+
+            _timePicker.SetActive(true);
+            _timeDisplay.SetActive(false);
+        };
     }
 
     // フッターメニュー
@@ -96,7 +113,7 @@ public class TimerManager : MonoBehaviour {
         _separeteCountdown[2] = second3;
         for (int i = 0; i < _separeteCountdown.Length; i++)
             _separeteTime[i] = _separeteCountdown[i];
-        _enableTimer = false;
+        _enable = false;
         _initTime = Countdown;
         updateTimerDisplay();
 
@@ -135,7 +152,7 @@ public class TimerManager : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         //タイマーが無効の場合
-        if (!_enableTimer)
+        if (!_enable)
             return;
 
         updateTime();
@@ -170,7 +187,7 @@ public class TimerManager : MonoBehaviour {
         _separeteCountdown[1] = 0;
         _separeteCountdown[2] = 0;
         _elapsedTime = _initTime;
-        _enableTimer = false;
+        _enable = false;
         _audioSource.clip = _soundPotato;
         _audioSource.Play();
     }
