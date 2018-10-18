@@ -15,7 +15,7 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private ProgressRing[] _progressRings;
     [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton;
     [SerializeField] private GameObject _timeDisplay, _timePicker, _cancelButtons, _playButtons;
-    private Action _showTimer, _showPicker,_hiddenTimerAndPicker;
+    private Action _showTimerAction, _showPickerAction,_hiddenTimerAndPickerAction;
 
     
 
@@ -33,13 +33,13 @@ public class TimerManager : MonoBehaviour {
         set {
             switch (_displayType) {
                 case BottomAreaDisplayType.HIDDEN:
-                    _hiddenTimerAndPicker.InvokeSafe();
+                    _hiddenTimerAndPickerAction.InvokeSafe();
                     break;
                 case BottomAreaDisplayType.TIMER:
-                    _showTimer.InvokeSafe();
+                    _showTimerAction.InvokeSafe();
                     break;
                 case BottomAreaDisplayType.PICKER:
-                    _showPicker.InvokeSafe();
+                    _showPickerAction.InvokeSafe();
                     break;
             }
             _displayType = value;
@@ -54,6 +54,19 @@ public class TimerManager : MonoBehaviour {
     IEnumerator Start() {
         yield return new WaitForEndOfFrame();
         setTimer(2, 2, 2);
+    }
+    
+    void Update() {
+        //タイマーが無効の場合
+        if (!_enable)
+            return;
+
+        updateTime();
+
+        if (Countdown <= 0)
+            complate();
+
+        updateTimerDisplay();
     }
 
     /*
@@ -114,21 +127,21 @@ public class TimerManager : MonoBehaviour {
             setTimer(200, 200, 200);
         });
 
-        _showTimer = () => {
+        _showTimerAction = () => {
             _cancelButtons.SetActive(true);
             _playButtons.SetActive(true);
 
             _timePicker.SetActive(false);
             _timeDisplay.SetActive(true);
         };
-        _showPicker = () => {
+        _showPickerAction = () => {
             _cancelButtons.SetActive(false);
             _playButtons.SetActive(false);
 
             _timePicker.SetActive(true);
             _timeDisplay.SetActive(false);
         };
-        _hiddenTimerAndPicker = () => {
+        _hiddenTimerAndPickerAction = () => {
             _cancelButtons.SetActive(false);
             _playButtons.SetActive(false);
 
@@ -144,10 +157,10 @@ public class TimerManager : MonoBehaviour {
                 setTimer(2, 2, 2);
                 break;
             case 1:
-                _showPicker.InvokeSafe();
+                _showPickerAction.InvokeSafe();
                 break;
             case 2:
-                _showTimer.InvokeSafe();
+                _showTimerAction.InvokeSafe();
                 break;
             default:
                 break;
@@ -167,6 +180,7 @@ public class TimerManager : MonoBehaviour {
         updateTimerDisplay();
 
         displayType = BottomAreaDisplayType.TIMER;
+        Debug.Log("あああ");
     }
 
     // タイマーの文字更新
@@ -196,20 +210,6 @@ public class TimerManager : MonoBehaviour {
             return (int) (Math.Floor(Countdown / 60) + 1);
 
         return (int) Math.Floor(Countdown / 60);
-    }
-
-    // Update is called once per frame
-    void Update() {
-        //タイマーが無効の場合
-        if (!_enable)
-            return;
-
-        updateTime();
-
-        if (Countdown <= 0)
-            complate();
-
-        updateTimerDisplay();
     }
 
     // タイマーの更新
