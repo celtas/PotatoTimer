@@ -17,8 +17,6 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private GameObject _timeDisplay, _timePicker, _cancelButtons, _playButtons;
     private Action _showTimerAction, _showPickerAction,_hiddenTimerAndPickerAction;
 
-    
-
     private bool _enable;
     [SerializeField] private AudioClip _soundPotato;
     [SerializeField] private AudioSource _audioSource;
@@ -27,10 +25,11 @@ public class TimerManager : MonoBehaviour {
     ///   <para>ボトムエリアの状態</para>
     /// </summary>
     [SerializeField]
-    private BottomAreaDisplayType _displayType = BottomAreaDisplayType.HIDDEN;
+    private BottomAreaDisplayType _displayType;
     public BottomAreaDisplayType displayType {
         get { return _displayType; }
         set {
+            _displayType = value;
             switch (_displayType) {
                 case BottomAreaDisplayType.HIDDEN:
                     _hiddenTimerAndPickerAction.InvokeSafe();
@@ -42,13 +41,11 @@ public class TimerManager : MonoBehaviour {
                     _showPickerAction.InvokeSafe();
                     break;
             }
-            _displayType = value;
         }
     }
 
     private void Awake() {
         registerEventListener();
-        displayType = BottomAreaDisplayType.HIDDEN;
     }
 
     IEnumerator Start() {
@@ -180,7 +177,6 @@ public class TimerManager : MonoBehaviour {
         updateTimerDisplay();
 
         displayType = BottomAreaDisplayType.TIMER;
-        Debug.Log("あああ");
     }
 
     // タイマーの文字更新
