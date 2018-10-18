@@ -200,8 +200,6 @@ public class TimerManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        Debug.Log("あああ");
-        
         //タイマーが無効の場合
         if (!_enable)
             return;
