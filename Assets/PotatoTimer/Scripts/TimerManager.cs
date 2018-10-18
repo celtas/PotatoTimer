@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using TMPro;
+using UnityEditor;
 
 public class TimerManager : MonoBehaviour {
     public TimePicker timePicker;
@@ -16,7 +17,7 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private GameObject _timeDisplay, _timePicker, _cancelButtons, _playButtons;
     private Action _showTimer, _showPicker,_hiddenTimerAndPicker;
 
-    [SerializeField] private BottomAreaDisplayType _displayType = BottomAreaDisplayType.HIDDEN;
+    
 
     private bool _enable;
     [SerializeField] private AudioClip _soundPotato;
@@ -25,6 +26,8 @@ public class TimerManager : MonoBehaviour {
     /// <summary>
     ///   <para>ボトムエリアの状態</para>
     /// </summary>
+    [SerializeField]
+    private BottomAreaDisplayType _displayType = BottomAreaDisplayType.HIDDEN;
     public BottomAreaDisplayType displayType {
         get { return _displayType; }
         set {
@@ -197,6 +200,8 @@ public class TimerManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        Debug.Log("あああ");
+        
         //タイマーが無効の場合
         if (!_enable)
             return;
@@ -254,5 +259,13 @@ public class TimerManager : MonoBehaviour {
         ///   <para>タイムピッカーを表示する。ボタンは非表示</para>
         /// </summary>
         PICKER,
+    }
+
+    void OnValidate() {
+        if (EditorApplication.isPlaying)
+            return;
+
+        registerEventListener();
+        displayType =  _displayType;
     }
 }
