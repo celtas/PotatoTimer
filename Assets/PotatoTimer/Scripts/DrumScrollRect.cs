@@ -89,7 +89,7 @@ public class DrumScrollRect : ScrollRect {
     }
 
     private bool isAllowedToMovement() {
-        // 動いていない時にUpdateを呼ばないための処理
+        // ドラムが1秒以上動いていない場合は移動の補間をしない
         if (_lastUpdatedContentPosY == content.position.y) {
             if (_elapsedTime > 1f)
                 return false;
