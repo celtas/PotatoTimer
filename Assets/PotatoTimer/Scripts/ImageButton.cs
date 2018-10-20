@@ -61,10 +61,8 @@ public class ImageButton : MonoBehaviour {
         eventEnabled.AddListener(() => enable = true);
 
         foreach (TextMeshProUGUI text in _texts) {
-            // マウスオーバー時のテキスト色変更
-            eventEntered.AddListener(() => text.color = _disableTextColor);
+            eventClicked.AddListener(() => text.color = _releaseColor);
             eventEntered.AddListener(() => text.color = _highlightTextColor);
-            eventExited.AddListener(() => text.color = _textColor);
             eventExited.AddListener(() => text.color = _textColor);
             // マウスオーバー時のテキスト色変更
             eventDisabled.AddListener(() => text.color = _disableTextColor);
