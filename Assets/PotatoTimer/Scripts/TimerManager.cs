@@ -141,10 +141,27 @@ public class TimerManager : MonoBehaviour {
         _hiddenTimerAndPickerAction = () => {
             _cancelButtons.SetActive(false);
             _playButtons.SetActive(false);
-
+    
             _timePicker.SetActive(false);
             _timeDisplay.SetActive(false);
         };
+    }
+    
+    // フッターメニュー
+    public void clickContentMenu(int index) {
+        switch (index) {
+            case 0:
+                setTimer(2, 2, 2);
+                break;
+            case 1:
+                _showPickerAction.InvokeSafe();
+                break;
+            case 2:
+                _showTimerAction.InvokeSafe();
+                break;
+        }
+
+        Debug.Log(index);
     }
 
     // フッターメニュー
@@ -242,15 +259,15 @@ public class TimerManager : MonoBehaviour {
 
     public enum BottomAreaDisplayType {
         /// <summary>
-        ///   <para>タイマーを表示する。ボタンは表示</para>
+        ///   <para>タイムピッカー、タイマーを非表示にする</para>
         /// </summary>
         HIDDEN,
         /// <summary>
-        ///   <para>タイマーを表示する。ボタンは表示</para>
+        ///   <para>タイマーを表示する</para>
         /// </summary>
         TIMER,
         /// <summary>
-        ///   <para>タイムピッカーを表示する。ボタンは非表示</para>
+        ///   <para>タイムピッカーを表示する</para>
         /// </summary>
         PICKER,
     }
