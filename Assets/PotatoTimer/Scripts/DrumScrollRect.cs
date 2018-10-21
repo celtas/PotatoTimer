@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -19,8 +18,9 @@ public class DrumScrollRectEditor : Editor {
 }
 
 public class DrumScrollRect : ScrollRect {
-    [SerializeField] private String _selectedContentText;
-
+    private TimePicker _timePicker;
+    private String _selectedContentText = "0";
+    
     [SerializeField] private RectTransform _centerRect;
     private RectTransform[] _contents;
     
@@ -52,6 +52,7 @@ public class DrumScrollRect : ScrollRect {
 
     public void Awake() {
         _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
+        _timePicker = gameObject.GetComponentInParent<TimePicker>();
     }
 
     IEnumerator Start () {
@@ -73,7 +74,11 @@ public class DrumScrollRect : ScrollRect {
         RectTransform nearestRect = _contents.NearestY(_centerRect.position.y);
 
         // 選択されている(ドラムの中心にある)要素を取得
-        _selectedContentText = nearestRect.gameObject.GetComponent<TextMeshProUGUI>().text;
+        TextMeshProUGUI textMesh = nearestRect.gameObject.GetComponent<TextMeshProUGUI>();
+        if (!_selectedContentText.Equals(textMesh.text)) {
+            _selectedContentText = textMesh.text;
+            _timePicker.onChangedValue();
+        }
         
         // ドラムロールを再現するためにscale値を変更
         List<RectTransform> rollContents = getRollContentsOnDrum(nearestRect,3);
@@ -174,7 +179,6 @@ public class DrumScrollRect : ScrollRect {
         _scrolling = true;
         _forbidedTime = 0.25f;
     }
-
     public string SelectedContentText {
         get { return _selectedContentText; }
         set {
@@ -186,6 +190,7 @@ public class DrumScrollRect : ScrollRect {
             float delta = _centerRect.position.y - targetRect.position.y;
             content.position = content.position + new Vector3(0, delta, 0);
             _selectedContentText = value;
+            _timePicker.onChangedValue();
         }
     }
 }
