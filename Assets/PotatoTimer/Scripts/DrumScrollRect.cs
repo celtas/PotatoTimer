@@ -50,13 +50,11 @@ public class DrumScrollRect : ScrollRect {
         _dragging = true;
     }
 
-    public void Awake() {
+    private void Awake() {
+        content.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
         _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
         _timePicker = gameObject.GetComponentInParent<TimePicker>();
-    }
-
-    IEnumerator Start () {
-        yield return null;
+        
         contentSizeDeltaHalf = content.sizeDelta.y / 2f + 0.03f;
         drumRect = gameObject.transform.GetComponent<RectTransform>();
         contentHeightHalf = (content.rect.height - content.sizeDelta.y)/2f;
@@ -129,6 +127,7 @@ public class DrumScrollRect : ScrollRect {
 
         // 中心の要素のscaleを調整
         rollContents.Add(rollContent);
+        
         // 上下3つの要素のScaleを調整
         for (int range = 1; range <= searchRange; range++) {
             rollContent = _contents.ElementAtOrDefault(index + range);
@@ -179,16 +178,23 @@ public class DrumScrollRect : ScrollRect {
         _scrolling = true;
         _forbidedTime = 0.25f;
     }
+    
     public string SelectedContentText {
         get { return _selectedContentText; }
         set {
+            // 同じデータを上書きする場合
+            if (_selectedContentText.Equals(value))
+                return;
+            
+            // 指定された値のロールコンテンツが見つからなかった場合
             RectTransform targetRect = _contents.FirstOrDefault(c => c.GetComponent<TextMeshProUGUI>().text.Equals(value));
-
             if (targetRect == null)
                 return;
             
+            // 指定した値のロールコンテンツまでドラムを移動する
             float delta = _centerRect.position.y - targetRect.position.y;
             content.position = content.position + new Vector3(0, delta, 0);
+            
             _selectedContentText = value;
             _timePicker.onChangedValue();
         }
