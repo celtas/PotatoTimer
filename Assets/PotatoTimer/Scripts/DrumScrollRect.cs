@@ -18,27 +18,29 @@ public class DrumScrollRectEditor : Editor {
 }
 
 public class DrumScrollRect : ScrollRect {
-    private TimePicker _timePicker;
-    private String _selectedContentText = "0";
+    [SerializeField] private TimePicker _timePicker;
     
-    [SerializeField] private RectTransform _centerRect;
+    // 選択されている文字列
+    private String _selectedContentText;
+    
+    // ロールコンテンツリスト
     private RectTransform[] _contents;
-    
+    // ロールサイズ
     private float contentSizeDeltaHalf;
     private float contentHeightHalf;
+    // ロールが表示されているエリアの中央のサイズ
+    [SerializeField] private RectTransform _centerRect;
 
     // m_Draggingがprivateでアクセスできない
     private bool _dragging;
     private bool _scrolling;
-
     // スクロールした後に移動補間を禁止する時間
     private float _forbidedTime;
-
-    // Updateした後のcontentの値
-    private float _lastUpdatedContentPosY;
+    // ロールが動いていない時間
     private float _elapsedTime;
 
-    private RectTransform drumRect;
+    // Updateした後のロールのy値
+    private float _lastUpdatedContentPosY;
     
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
@@ -51,20 +53,28 @@ public class DrumScrollRect : ScrollRect {
     }
 
     private void Awake() {
+        // contentのサイズを計算
         content.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
-        _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
-        _timePicker = gameObject.GetComponentInParent<TimePicker>();
         
+        // ロールコンテンツを取得
+        _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
+        // ロール全体の高さの半分
         contentSizeDeltaHalf = content.sizeDelta.y / 2f + 0.03f;
-        drumRect = gameObject.transform.GetComponent<RectTransform>();
+        // 表示されているロールの高さの半分
         contentHeightHalf = (content.rect.height - content.sizeDelta.y)/2f;
         
+        // ロールコンテンツの一番上が表示エリアの中央に来るように合わせる
         content.localPosition = new Vector3(content.localPosition.x, -content.sizeDelta.y / 2, content.localPosition.z);
+        
+        // 選択されている要素を取得
+        RectTransform nearestRect = _contents.NearestY(_centerRect.position.y);
+        _selectedContentText = nearestRect.gameObject.GetComponent<TextMeshProUGUI>().text;
     }
 
     private void LateUpdate() {
         base.LateUpdate();
         
+        // プレイ中以外
         if (!EditorApplication.isPlaying)
             return;
 
@@ -82,8 +92,7 @@ public class DrumScrollRect : ScrollRect {
         List<RectTransform> rollContents = getRollContentsOnDrum(nearestRect,3);
         rollContents.ForEach(scaleRollContent);
 
-        // ドラッグ中やスクロール中、コンテンツが動いていない時、弾性力の影響下にある時
-        // は移動補間の処理を中断する
+        // ドラッグ中やスクロール中、コンテンツが動いていない時、弾性力の影響下にある時は移動補間の処理を中断する
         if (!isAllowedToMovement())
             return;
         
