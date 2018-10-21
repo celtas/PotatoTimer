@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class TimePicker : MonoBehaviour {
     public DrumScrollRect hourDrum, minuteDrum, secondDrum;
-    public Action<float,float,float> onChanged;
+    public Action<int,int,int> onChanged;
     
     /// <summary>
     /// ロールコンテンツの値が変更した時に呼び出される
     /// </summary>
     public void onChangedValue() {
         onChanged.InvokeSafe(
-            float.Parse(hourDrum.SelectedContentText),
-            float.Parse(minuteDrum.SelectedContentText),
-            float.Parse(secondDrum.SelectedContentText));
+            int.Parse(hourDrum.SelectedContentText),
+            int.Parse(minuteDrum.SelectedContentText),
+            int.Parse(secondDrum.SelectedContentText));
     }
 
 // 動的に数値を生成
