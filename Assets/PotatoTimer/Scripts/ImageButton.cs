@@ -15,7 +15,7 @@ public class ImageButton : MonoBehaviour {
         _disableTextColor,
         _highlightTextColor;
 
-    public UnityEvent eventPressed, eventClicked, eventEntered, eventExited, eventDisabled, eventEnabled;
+    public UnityEvent pressEvent, clickEvent, enterEvent, eventExited, disableEvent, enableEvent;
 
     public bool enable = true;
     private Image[] _images;
@@ -46,57 +46,61 @@ public class ImageButton : MonoBehaviour {
     }
 
     void Awake() {
+        registerAction();
+    }
+
+    void registerAction() {
         _images = GetComponentsInChildren<Image>();
         _texts = GetComponentsInChildren<TextMeshProUGUI>();
+        
+        disableEvent.AddListener(() => enable = false);
+        enableEvent.AddListener(() => enable = true);
+        
         foreach (Image image in _images) {
-            eventPressed.AddListener(() => image.color = _pressColor);
-            eventClicked.AddListener(() => image.color = _releaseColor);
-            eventEntered.AddListener(() => image.color = _highlightColor);
+            pressEvent.AddListener(() => image.color = _pressColor);
+            clickEvent.AddListener(() => image.color = _releaseColor);
+            enterEvent.AddListener(() => image.color = _highlightColor);
             eventExited.AddListener(() => image.color = _normalColor);
-            eventDisabled.AddListener(() => image.color = _disableColor);
-            eventEnabled.AddListener(() => image.color = _normalColor);
+            disableEvent.AddListener(() => image.color = _disableColor);
+            enableEvent.AddListener(() => image.color = _normalColor);
         }
-
-        eventDisabled.AddListener(() => enable = false);
-        eventEnabled.AddListener(() => enable = true);
-
         foreach (TextMeshProUGUI text in _texts) {
-            eventClicked.AddListener(() => text.color = _releaseColor);
-            eventEntered.AddListener(() => text.color = _highlightTextColor);
+            clickEvent.AddListener(() => text.color = _releaseColor);
+            enterEvent.AddListener(() => text.color = _highlightTextColor);
             eventExited.AddListener(() => text.color = _textColor);
             // マウスオーバー時のテキスト色変更
-            eventDisabled.AddListener(() => text.color = _disableTextColor);
-            eventEnabled.AddListener(() => text.color = _textColor);
+            disableEvent.AddListener(() => text.color = _disableTextColor);
+            enableEvent.AddListener(() => text.color = _textColor);
         }
     }
 
     public void DisableButton() {
-        eventDisabled.InvokeSafe();
+        disableEvent.InvokeSafe();
     }
 
     public void EnableButton() {
-        eventEnabled.InvokeSafe();
+        enableEvent.InvokeSafe();
     }
 
     public void OnMouseEnter() {
         if (!enable)
             return;
 
-        eventEntered.InvokeSafe();
+        enterEvent.InvokeSafe();
     }
 
     public void OnMouseDown() {
         if (!enable)
             return;
 
-        eventPressed.InvokeSafe();
+        pressEvent.InvokeSafe();
     }
 
     public void OnMouseUp() {
         if (!enable)
             return;
 
-        eventClicked.InvokeSafe();
+        clickEvent.InvokeSafe();
     }
 
     public void OnMouseExit() {
