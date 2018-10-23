@@ -12,7 +12,7 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private int[] _separeteTime = new int[3];
     [SerializeField] private TextMeshProUGUI _timeText;
     [SerializeField] private ProgressRing[] _progressRings;
-    [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton;
+    [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton, _modifyButton;
     [SerializeField] private GameObject _timerObjects;
     
     public TimePicker timePicker;
@@ -35,7 +35,7 @@ public class TimerManager : MonoBehaviour {
             _displayType = value;
             switch (_displayType) {
                 case BottomAreaDisplayType.HIDDEN:
-                    timerStatus = TimerStatus.EDIT;
+                    timerStatus = TimerStatus.STOP_AND_HIDDEN;
                     
                     timePicker.gameObject.SetActive(false);
                     _timerObjects.SetActive(false);
@@ -47,7 +47,8 @@ public class TimerManager : MonoBehaviour {
                     _timerObjects.gameObject.SetActive(true);
                     break;
                 case BottomAreaDisplayType.PICKER:
-                    timerStatus = TimerStatus.EDIT;
+                    timerStatus = TimerStatus.STOP_AND_HIDDEN;
+                    _modifyButton.gameObject.SetActive(true);
                     
                     timePicker.gameObject.SetActive(true);
                     _timerObjects.SetActive(false);
@@ -79,7 +80,7 @@ public class TimerManager : MonoBehaviour {
                 case TimerStatus.STOP:
                     _startButton.gameObject.SetActive(true);
                     break;
-                case TimerStatus.EDIT:
+                case TimerStatus.STOP_AND_HIDDEN:
                     _cancelButton.gameObject.SetActive(false);
                     break;
             }
@@ -114,7 +115,7 @@ public class TimerManager : MonoBehaviour {
     }
 
     private void Start() {
-        setTimer(2, 2, 2);
+        setTimer(120, 240, 180);
     }
     
     void Update() {
@@ -169,7 +170,12 @@ public class TimerManager : MonoBehaviour {
 
         _cancelButton.clickEvent.AddListener(() => {
             timerStatus = TimerStatus.STOP;
-            setTimer(200, 200, 200);
+            setTimer(_separeteTime[0], _separeteTime[1], _separeteTime[2]);
+        });
+        
+        _modifyButton.clickEvent.AddListener(() => {
+            timerStatus = TimerStatus.STOP;
+            setTimer(_separeteTime[0], _separeteTime[1], _separeteTime[2]);
         });
     }
 
@@ -177,6 +183,7 @@ public class TimerManager : MonoBehaviour {
         _startButton.gameObject.SetActive(false);
         _resumeButton.gameObject.SetActive(false);
         _pauseButton.gameObject.SetActive(false);
+        _modifyButton.gameObject.SetActive(false);
         _cancelButton.gameObject.SetActive(true);
         _cancelButton.DisableButton();
     }
@@ -270,7 +277,14 @@ public class TimerManager : MonoBehaviour {
     public void clickFooterMenu(int index) {
         switch (index) {
             case 0:
-                setTimer(2, 2, 2);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
                 break;
         }
     }
@@ -294,6 +308,6 @@ public class TimerManager : MonoBehaviour {
         PLAY,
         PAUSE,
         STOP,
-        EDIT,
+        STOP_AND_HIDDEN,
     }
 }
