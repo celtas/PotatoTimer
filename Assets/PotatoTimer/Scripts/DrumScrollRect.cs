@@ -35,9 +35,11 @@ public class DrumScrollRect : ScrollRect {
     private bool _dragging;
     private bool _scrolling;
     // スクロールした後に移動補間を禁止する時間
-    private float _forbidedTime;
+    private float _forbidScrollingTime;
     // ロールが動いていない時間
     private float _elapsedTime;
+    // 初期化されたか
+    public bool initializing = true;
 
     // Updateした後のロールのy値
     private float _lastUpdatedContentPosY;
@@ -52,23 +54,26 @@ public class DrumScrollRect : ScrollRect {
         _dragging = true;
     }
 
-    private void Awake() {
-        // contentのサイズを計算
-        content.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
-        
+    public void Awake() {
         // ロールコンテンツを取得
         _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
+        _selectedContentText = _contents[0].GetComponent<TextMeshProUGUI>().text;
+    }
+
+    private IEnumerator Start() {
+        // ContentSizeFilterが実行されるまで待つ
+        yield return new WaitForFixedUpdate();
+        
         // ロール全体の高さの半分
         contentSizeDeltaHalf = content.sizeDelta.y / 2f + 0.03f;
         // 表示されているロールの高さの半分
-        contentHeightHalf = (content.rect.height - content.sizeDelta.y)/2f;
+        contentHeightHalf = content.rect.height/2f;
         
         // ロールコンテンツの一番上が表示エリアの中央に来るように合わせる
         content.localPosition = new Vector3(content.localPosition.x, -content.sizeDelta.y / 2, content.localPosition.z);
         
-        // 選択されている要素を取得
-        RectTransform nearestRect = _contents.NearestY(_centerRect.position.y);
-        _selectedContentText = nearestRect.gameObject.GetComponent<TextMeshProUGUI>().text;
+        // 初期化フラグ
+        initializing = false;
     }
 
     private void LateUpdate() {
@@ -76,6 +81,9 @@ public class DrumScrollRect : ScrollRect {
         
         // プレイ中以外
         if (!EditorApplication.isPlaying)
+            return;
+
+        if (!isAllowedToScale())
             return;
 
         // 中心にもっとも近い要素を取得
@@ -100,21 +108,24 @@ public class DrumScrollRect : ScrollRect {
         interpolateDrumMovement(nearestRect);
     }
 
-    private bool isAllowedToMovement() {
+    private bool isAllowedToScale() {
         // ドラムが1秒以上動いていない場合は移動の補間をしない
         if (_lastUpdatedContentPosY == content.position.y) {
             if (_elapsedTime > 1f)
                 return false;
             _elapsedTime += Time.deltaTime;
         }
-        else {
-            _elapsedTime = 0;
-        }
+        
+        _elapsedTime = 0;
 
+        return true;
+    }
+
+    private bool isAllowedToMovement() {
         // ドラッキング中、スクロール中は移動の補間をしない
-        if (_forbidedTime > 0f)
-            _forbidedTime -= Time.deltaTime;
-        if (_forbidedTime < 0f)
+        if (_forbidScrollingTime > 0f)
+            _forbidScrollingTime -= Time.deltaTime;
+        if (_forbidScrollingTime < 0f)
             _scrolling = false;
         if (_dragging || _scrolling)
             return false;
@@ -185,7 +196,7 @@ public class DrumScrollRect : ScrollRect {
         base.OnScroll(eventData);
 
         _scrolling = true;
-        _forbidedTime = 0.25f;
+        _forbidScrollingTime = 0.25f;
     }
     
     public string SelectedContentText {
@@ -194,7 +205,7 @@ public class DrumScrollRect : ScrollRect {
             // 同じデータを上書きする場合
             if (_selectedContentText.Equals(value))
                 return;
-            
+
             // 指定された値のロールコンテンツが見つからなかった場合
             RectTransform targetRect = _contents.FirstOrDefault(c => c.GetComponent<TextMeshProUGUI>().text.Equals(value));
             if (targetRect == null)

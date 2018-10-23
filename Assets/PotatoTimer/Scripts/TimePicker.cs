@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class TimePicker : MonoBehaviour {
@@ -40,15 +41,21 @@ public class TimePicker : MonoBehaviour {
 //    }
 
     public void setTime(int hour, int minute, int second) {
-        hourDrum.SelectedContentText = hour.ToString();
-        minuteDrum.SelectedContentText = minute.ToString();
-        secondDrum.SelectedContentText = second.ToString();
+        StartCoroutine(setTimeAfterInit(hour,minute,second));
     }
 
     public void setTime(int seconds) {
         int hour = seconds / 3600;
         int minute = (seconds / 3600) / 60;
         int second = seconds % 60;
+        setTime(hour, minute, second);
+    }
+
+    private IEnumerator setTimeAfterInit(int hour, int minute, int second) {
+        while (hourDrum.initializing || minuteDrum.initializing || secondDrum.initializing) {
+            yield return null;
+        }
+        
         hourDrum.SelectedContentText = hour.ToString();
         minuteDrum.SelectedContentText = minute.ToString();
         secondDrum.SelectedContentText = second.ToString();
