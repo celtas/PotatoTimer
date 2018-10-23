@@ -46,7 +46,7 @@ public class TimePicker : MonoBehaviour {
 
     public void setTime(int seconds) {
         int hour = seconds / 3600;
-        int minute = (seconds / 3600) / 60;
+        int minute = (seconds % 3600) / 60;
         int second = seconds % 60;
         setTime(hour, minute, second);
     }
