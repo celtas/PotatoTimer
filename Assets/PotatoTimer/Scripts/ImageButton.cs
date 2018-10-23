@@ -1,9 +1,7 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 public class ImageButton : MonoBehaviour {
     [SerializeField] private Color _normalColor,
@@ -65,7 +63,6 @@ public class ImageButton : MonoBehaviour {
             enableEvent.AddListener(() => image.color = _normalColor);
         }
         foreach (TextMeshProUGUI text in _texts) {
-            clickEvent.AddListener(() => text.color = _releaseColor);
             enterEvent.AddListener(() => text.color = _highlightTextColor);
             eventExited.AddListener(() => text.color = _textColor);
             // マウスオーバー時のテキスト色変更
@@ -75,10 +72,12 @@ public class ImageButton : MonoBehaviour {
     }
 
     public void DisableButton() {
+        Debug.Log(gameObject.name+":"+"disable");
         disableEvent.InvokeSafe();
     }
 
     public void EnableButton() {
+        Debug.Log(gameObject.name+":"+"enable");
         enableEvent.InvokeSafe();
     }
 
