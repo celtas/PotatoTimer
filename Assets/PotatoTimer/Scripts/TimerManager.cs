@@ -1,28 +1,31 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
-using UnityEngine;
+using System.Threading;
 using TMPro;
+using UnityEngine;
 using UnityEditor;
+using UnityEngine.Events;
 
 public class TimerManager : MonoBehaviour {
-    public TimePicker timePicker;
-
     [SerializeField] private float _initTime, _elapsedTime;
     [SerializeField] private float[] _separeteCountdown = new float[3];
-    [SerializeField] private float[] _separeteTime = new float[3];
+    [SerializeField] private int[] _separeteTime = new int[3];
     [SerializeField] private TextMeshProUGUI _timeText;
     [SerializeField] private ProgressRing[] _progressRings;
     [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton;
-    [SerializeField] private GameObject _timeDisplay, _timePicker, _cancelButtons, _playButtons;
-    private Action _showTimerAction, _showPickerAction,_hiddenTimerAndPickerAction;
+    [SerializeField] private GameObject _timerObjects;
+    
+    public TimePicker timePicker;
 
+    //　選択しているタイマー番号
+    private int _selectContentIndex = -1;
+    
     private bool _enable;
     [SerializeField] private AudioClip _soundPotato;
     [SerializeField] private AudioSource _audioSource;
 
     /// <summary>
-    ///   <para>ボトムエリアの状態</para>
+    ///   <para>ボトムエリアの表示状態</para>
     /// </summary>
     [SerializeField]
     private BottomAreaDisplayType _displayType;
@@ -32,24 +35,85 @@ public class TimerManager : MonoBehaviour {
             _displayType = value;
             switch (_displayType) {
                 case BottomAreaDisplayType.HIDDEN:
-                    _hiddenTimerAndPickerAction.InvokeSafe();
+                    timerStatus = TimerStatus.EDIT;
+                    
+                    timePicker.gameObject.SetActive(false);
+                    _timerObjects.SetActive(false);
                     break;
                 case BottomAreaDisplayType.TIMER:
-                    _showTimerAction.InvokeSafe();
+                    timerStatus = TimerStatus.STOP;
+                    
+                    timePicker.gameObject.SetActive(false);
+                    _timerObjects.gameObject.SetActive(true);
                     break;
                 case BottomAreaDisplayType.PICKER:
-                    _showPickerAction.InvokeSafe();
+                    timerStatus = TimerStatus.EDIT;
+                    
+                    timePicker.gameObject.SetActive(true);
+                    _timerObjects.SetActive(false);
+                    timePicker.setTime(_separeteTime[_selectContentIndex]);
                     break;
             }
         }
     }
+    
+    /// <summary>
+    ///   <para>タイマーの状態</para>
+    /// </summary>
+    [SerializeField]
+    private TimerStatus _timerStatus = TimerStatus.STOP;
+    public TimerStatus timerStatus{
+        get { return _timerStatus; }
+        set {
+            _timerStatus = value;
+            initButtons();
+            switch (_timerStatus) {
+                case TimerStatus.PLAY:
+                    _pauseButton.gameObject.SetActive(true);
+                    _cancelButton.EnableButton();
+                    break;
+                case TimerStatus.PAUSE:
+                    _resumeButton.gameObject.SetActive(true);
+                    _cancelButton.EnableButton();
+                    break;
+                case TimerStatus.STOP:
+                    _startButton.gameObject.SetActive(true);
+                    break;
+                case TimerStatus.EDIT:
+                    _cancelButton.gameObject.SetActive(false);
+                    break;
+            }
+        }
+    }
+    
+    public float Countdown {
+        get { return _separeteCountdown.Sum(); }
+    }
+
+    void OnTimePickerChanged(int h,int m ,int s) {
+        if (_selectContentIndex < 0)
+            return;
+        
+        _separeteTime[_selectContentIndex] = h * 3600 + m * 60 + s;
+        _separeteCountdown[_selectContentIndex] = _separeteTime[_selectContentIndex];
+        _initTime = Countdown;
+        updateTimerDisplay();
+    }
+    
+    void OnValidate() {
+        if (EditorApplication.isPlaying)
+            return;
+
+        registerEventListener();
+        displayType =  _displayType;
+    }
 
     private void Awake() {
         registerEventListener();
+        timePicker.onChanged += OnTimePickerChanged;
     }
 
-    IEnumerator Start() {
-        yield return new WaitForEndOfFrame();
+    private void Start() {
         setTimer(2, 2, 2);
     }
     
@@ -85,117 +149,51 @@ public class TimerManager : MonoBehaviour {
     }
     */
 
-    // ゲームオブジェクトの状態を操作するアクションを登録
     private void registerEventListener() {
-        _startButton.eventClicked.AddListener(() => {
-            _startButton.gameObject.SetActive(false);
-            _resumeButton.gameObject.SetActive(false);
-            _pauseButton.gameObject.SetActive(true);
-            _cancelButton.EnableButton();
-
+        // ボタンクリック時
+        _startButton.clickEvent.AddListener(() => {
+            timerStatus = TimerStatus.PLAY;
             _audioSource.Stop();
             _enable = true;
         });
 
-        _pauseButton.eventClicked.AddListener(() => {
-            _startButton.gameObject.SetActive(false);
-            _resumeButton.gameObject.SetActive(true);
-            _pauseButton.gameObject.SetActive(false);
-            _cancelButton.EnableButton();
-
+        _pauseButton.clickEvent.AddListener(() => {
+            timerStatus = TimerStatus.PAUSE;
             _enable = false;
         });
 
-        _resumeButton.eventClicked.AddListener(() => {
-            _startButton.gameObject.SetActive(true);
-            _resumeButton.gameObject.SetActive(false);
-            _pauseButton.gameObject.SetActive(false);
-            _cancelButton.DisableButton();
-
-            _startButton.eventClicked.InvokeSafe();
+        _resumeButton.clickEvent.AddListener(() => {
+            timerStatus = TimerStatus.PLAY;
+            _startButton.clickEvent.InvokeSafe();
         });
 
-        _cancelButton.eventClicked.AddListener(() => {
-            _startButton.gameObject.SetActive(true);
-            _resumeButton.gameObject.SetActive(false);
-            _pauseButton.gameObject.SetActive(false);
-            _cancelButton.DisableButton();
-
+        _cancelButton.clickEvent.AddListener(() => {
+            timerStatus = TimerStatus.STOP;
             setTimer(200, 200, 200);
         });
+    }
 
-        _showTimerAction = () => {
-            _cancelButtons.SetActive(true);
-            _playButtons.SetActive(true);
-
-            _timePicker.SetActive(false);
-            _timeDisplay.SetActive(true);
-        };
-        _showPickerAction = () => {
-            _cancelButtons.SetActive(false);
-            _playButtons.SetActive(false);
-
-            _timePicker.SetActive(true);
-            _timeDisplay.SetActive(false);
-        };
-        _hiddenTimerAndPickerAction = () => {
-            _cancelButtons.SetActive(false);
-            _playButtons.SetActive(false);
-    
-            _timePicker.SetActive(false);
-            _timeDisplay.SetActive(false);
-        };
+    private void initButtons() {
+        _startButton.gameObject.SetActive(false);
+        _resumeButton.gameObject.SetActive(false);
+        _pauseButton.gameObject.SetActive(false);
+        _cancelButton.gameObject.SetActive(true);
+        _cancelButton.DisableButton();
     }
     
-    // フッターメニュー
-    public void clickContentMenu(int index) {
-        switch (index) {
-            case 0:
-                setTimer(2, 2, 2);
-                break;
-            case 1:
-                _showPickerAction.InvokeSafe();
-                break;
-            case 2:
-                _showTimerAction.InvokeSafe();
-                break;
-        }
-
-        Debug.Log(index);
-    }
-
-    // フッターメニュー
-    public void clickFooterMenu(int index) {
-        switch (index) {
-            case 0:
-                setTimer(2, 2, 2);
-                break;
-            case 1:
-                _showPickerAction.InvokeSafe();
-                break;
-            case 2:
-                _showTimerAction.InvokeSafe();
-                break;
-            default:
-                break;
-        }
-
-        Debug.Log(index);
-    }
-
     public void setTimer(int second1, int second2, int second3) {
         _separeteCountdown[0] = second1;
         _separeteCountdown[1] = second2;
         _separeteCountdown[2] = second3;
         for (int i = 0; i < _separeteCountdown.Length; i++)
-            _separeteTime[i] = _separeteCountdown[i];
-        _enable = false;
+            _separeteTime[i] = (int) _separeteCountdown[i];
         _initTime = Countdown;
         updateTimerDisplay();
-
+        
+        _enable = false;
         displayType = BottomAreaDisplayType.TIMER;
     }
-
+    
     // タイマーの文字更新
     void updateTimerDisplay() {
         _timeText.text = Convert.ToString(RoundMinutes(Countdown)).PadLeft(2, '0') + " " +
@@ -252,9 +250,29 @@ public class TimerManager : MonoBehaviour {
         _audioSource.clip = _soundPotato;
         _audioSource.Play();
     }
+    
+    // コンテンツメニュー
+    public void clickContent(int index) {
+        _selectContentIndex = index;
+        switch (index) {
+            case -1:
+                displayType = BottomAreaDisplayType.TIMER;
+                break;
+            case 0:
+            case 1:
+            case 2:
+                displayType = BottomAreaDisplayType.PICKER;
+                break;
+        }
+    }
 
-    public float Countdown {
-        get { return _separeteCountdown.Sum(); }
+    // フッターメニュー
+    public void clickFooterMenu(int index) {
+        switch (index) {
+            case 0:
+                setTimer(2, 2, 2);
+                break;
+        }
     }
 
     public enum BottomAreaDisplayType {
@@ -271,12 +289,11 @@ public class TimerManager : MonoBehaviour {
         /// </summary>
         PICKER,
     }
-
-    void OnValidate() {
-        if (EditorApplication.isPlaying)
-            return;
-
-        registerEventListener();
-        displayType =  _displayType;
+    
+    public enum TimerStatus {
+        PLAY,
+        PAUSE,
+        STOP,
+        EDIT,
     }
 }
