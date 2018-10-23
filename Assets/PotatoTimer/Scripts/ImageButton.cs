@@ -72,12 +72,10 @@ public class ImageButton : MonoBehaviour {
     }
 
     public void DisableButton() {
-        Debug.Log(gameObject.name+":"+"disable");
         disableEvent.InvokeSafe();
     }
 
     public void EnableButton() {
-        Debug.Log(gameObject.name+":"+"enable");
         enableEvent.InvokeSafe();
     }
 
