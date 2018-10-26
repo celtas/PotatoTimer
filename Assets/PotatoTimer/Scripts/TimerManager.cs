@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using DG.Tweening;
 using TMPro;
@@ -56,7 +56,9 @@ public class TimerManager : MonoBehaviour {
                 case BottomAreaDisplayType.PICKER:
                     timerStatus = TimerStatus.STOP_AND_HIDDEN;
                     _modifyButton.gameObject.SetActive(true);
-                    
+                    _cancelButton.gameObject.SetActive(true);
+                    _cancelButton.EnableButton();
+
                     timePicker.gameObject.SetActive(true);
                     _timerObjects.SetActive(false);
                     timePicker.setTime(_separeteTime[_selectContentIndex]);
@@ -232,8 +234,20 @@ public class TimerManager : MonoBehaviour {
         });
 
         _cancelButton.clickEvent.AddListener(() => {
-            timerStatus = TimerStatus.STOP;
-            setTimer(_separeteTime[0], _separeteTime[1], _separeteTime[2]);
+            switch (_displayType) {
+                case BottomAreaDisplayType.TIMER:
+                    timerStatus = TimerStatus.STOP;
+                    setTimer(_separeteTime[0], _separeteTime[1], _separeteTime[2]);
+                    break;
+                case BottomAreaDisplayType.PICKER:
+                    // 要素の位置を元に戻す
+                    for (int index = 0; index < _contents.Length; index++) {
+                        RectTransform rectTransform = _contents[index];
+                        rectTransform.DOLocalMoveY(-rectTransform.rect.height * index, 1.5f).SetEase(Ease.OutQuint);
+                    }
+                    displayType = BottomAreaDisplayType.PICKER;
+                    break;
+            }
         });
 
         _modifyButton.clickEvent.AddListener(() => {
