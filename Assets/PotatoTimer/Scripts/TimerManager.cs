@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using DG.Tweening;
 using TMPro;
@@ -6,30 +6,36 @@ using UnityEngine;
 using UnityEditor;
 
 public class TimerManager : MonoBehaviour {
+    #region #Field
     [SerializeField] private float _initTime, _elapsedTime;
     [SerializeField] private float[] _separeteCountdown = new float[3];
     [SerializeField] private int[] _separeteTime = new int[3];
     [SerializeField] private TextMeshProUGUI _timeText;
     [SerializeField] private ProgressRing[] _progressRings;
     [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton, _modifyButton;
+
     [SerializeField] private GameObject _timerObjects;
+
     // 各タイマー
     [SerializeField] private RectTransform[] _contents;
-    
+
     public TimePicker timePicker;
 
     //　選択しているタイマー番号
     private int _selectContentIndex = -1;
-    
+
     private bool _enable;
     [SerializeField] private AudioClip _soundPotato;
     [SerializeField] private AudioSource _audioSource;
+    
+    #endregion
 
+    #region #Property
     /// <summary>
     ///   <para>ボトムエリアの表示状態</para>
     /// </summary>
-    [SerializeField]
-    private BottomAreaDisplayType _displayType;
+    [SerializeField] private BottomAreaDisplayType _displayType;
+    
     public BottomAreaDisplayType displayType {
         get { return _displayType; }
         set {
@@ -37,13 +43,13 @@ public class TimerManager : MonoBehaviour {
             switch (_displayType) {
                 case BottomAreaDisplayType.HIDDEN:
                     timerStatus = TimerStatus.STOP_AND_HIDDEN;
-                    
+
                     timePicker.gameObject.SetActive(false);
                     _timerObjects.SetActive(false);
                     break;
                 case BottomAreaDisplayType.TIMER:
                     timerStatus = TimerStatus.STOP;
-                    
+
                     timePicker.gameObject.SetActive(false);
                     _timerObjects.gameObject.SetActive(true);
                     break;
@@ -58,13 +64,13 @@ public class TimerManager : MonoBehaviour {
             }
         }
     }
-    
+
     /// <summary>
     ///   <para>タイマーの状態</para>
     /// </summary>
-    [SerializeField]
-    private TimerStatus _timerStatus = TimerStatus.STOP;
-    public TimerStatus timerStatus{
+    [SerializeField] private TimerStatus _timerStatus = TimerStatus.STOP;
+
+    public TimerStatus timerStatus {
         get { return _timerStatus; }
         set {
             _timerStatus = value;
@@ -87,29 +93,79 @@ public class TimerManager : MonoBehaviour {
             }
         }
     }
-    
+
     public float Countdown {
         get { return _separeteCountdown.Sum(); }
     }
+    
+    #endregion
+    
+    #region #Event
 
-    void OnTimePickerChanged(int h,int m ,int s) {
+    void OnTimePickerChanged(int h, int m, int s) {
         if (_selectContentIndex < 0)
             return;
-        
+
         _separeteTime[_selectContentIndex] = h * 3600 + m * 60 + s;
         _separeteCountdown[_selectContentIndex] = _separeteTime[_selectContentIndex];
         _initTime = Countdown;
         updateTimerDisplay();
     }
-    
+
     void OnValidate() {
         if (EditorApplication.isPlaying)
             return;
 
         registerEventListener();
-        displayType =  _displayType;
+        displayType = _displayType;
+    }
+    
+    // コンテンツメニュー
+    public void OnClickContentMenu(int clickContentIndex) {
+        _selectContentIndex = clickContentIndex;
+        switch (clickContentIndex) {
+            case -1:
+                displayType = BottomAreaDisplayType.TIMER;
+                break;
+            case 0:
+            case 1:
+            case 2:
+                for (int index = 0; index < _contents.Length; index++) {
+                    RectTransform rectTransform = _contents[index];
+                    // タッチされた要素
+                    if (index == clickContentIndex) {
+                        rectTransform.DOLocalMoveY(0, 1.5f).SetEase(Ease.OutQuint);
+                    }
+                    else {
+                        rectTransform.DOLocalMoveY(rectTransform.rect.height, 1.5f).SetEase(Ease.OutQuint);
+                    }
+                }
+
+                displayType = BottomAreaDisplayType.PICKER;
+                break;
+        }
     }
 
+    // フッターメニュー
+    public void OnClickFooterMenu(int clickContentIndex) {
+        switch (clickContentIndex) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+    }
+    
+    #endregion
+
+    #region #UnityEvent
+    
     private void Awake() {
         registerEventListener();
         timePicker.onChanged += OnTimePickerChanged;
@@ -118,7 +174,7 @@ public class TimerManager : MonoBehaviour {
     private void Start() {
         setTimer(120, 240, 180);
     }
-    
+
     void Update() {
         //タイマーが無効の場合
         if (!_enable)
@@ -131,7 +187,10 @@ public class TimerManager : MonoBehaviour {
 
         updateTimerDisplay();
     }
-
+    
+    #endregion
+    
+    #region #NativePlugin
     /*
     private void invokeNative(){
         AndroidJavaObject jo = new AndroidJavaObject("java.lang.String", "some string");
@@ -150,7 +209,10 @@ public class TimerManager : MonoBehaviour {
         }));
     }
     */
+    #endregion
 
+    #region #Initial
+    
     private void registerEventListener() {
         // ボタンクリック時
         _startButton.clickEvent.AddListener(() => {
@@ -173,7 +235,7 @@ public class TimerManager : MonoBehaviour {
             timerStatus = TimerStatus.STOP;
             setTimer(_separeteTime[0], _separeteTime[1], _separeteTime[2]);
         });
-        
+
         _modifyButton.clickEvent.AddListener(() => {
             timerStatus = TimerStatus.STOP;
             setTimer(_separeteTime[0], _separeteTime[1], _separeteTime[2]);
@@ -189,6 +251,10 @@ public class TimerManager : MonoBehaviour {
         _cancelButton.DisableButton();
     }
     
+    #endregion
+    
+    #region #TimerFunction
+
     public void setTimer(int second1, int second2, int second3) {
         _separeteCountdown[0] = second1;
         _separeteCountdown[1] = second2;
@@ -197,11 +263,11 @@ public class TimerManager : MonoBehaviour {
             _separeteTime[i] = (int) _separeteCountdown[i];
         _initTime = Countdown;
         updateTimerDisplay();
-        
+
         _enable = false;
         displayType = BottomAreaDisplayType.TIMER;
     }
-    
+
     // タイマーの文字更新
     void updateTimerDisplay() {
         _timeText.text = Convert.ToString(RoundMinutes(Countdown)).PadLeft(2, '0') + " " +
@@ -248,7 +314,7 @@ public class TimerManager : MonoBehaviour {
 
         _elapsedTime = _initTime - Countdown;
     }
-
+    
     void complate() {
         _separeteCountdown[0] = 0;
         _separeteCountdown[1] = 0;
@@ -259,66 +325,33 @@ public class TimerManager : MonoBehaviour {
         _audioSource.Play();
     }
     
-    // コンテンツメニュー
-    public void clickContent(int clickContentIndex) {
-        _selectContentIndex = clickContentIndex;
-        switch (clickContentIndex) {
-            case -1:
-                displayType = BottomAreaDisplayType.TIMER;
-                break;
-            case 0:
-            case 1:
-            case 2:
-                for (int index=0;index < _contents.Length;index++) {
-                    RectTransform rectTransform = _contents[index];
-                    // タッチされた要素
-                    if (index == clickContentIndex) {
-                        rectTransform.DOLocalMoveY(0,1.5f).SetEase(Ease.OutQuint);
-                    }
-                    else {
-                        rectTransform.DOLocalMoveY(rectTransform.rect.height, 1.5f).SetEase(Ease.OutQuint);
-                    }
-                }
-                displayType = BottomAreaDisplayType.PICKER;
-                break;
-        }
-    }
-
-    // フッターメニュー
-    public void clickFooterMenu(int clickContentIndex) {
-        switch (clickContentIndex) {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-    }
+    #endregion
+    
+    #region #Enum
 
     public enum BottomAreaDisplayType {
         /// <summary>
         ///   <para>タイムピッカー、タイマーを非表示にする</para>
         /// </summary>
         HIDDEN,
+
         /// <summary>
         ///   <para>タイマーを表示する</para>
         /// </summary>
         TIMER,
+
         /// <summary>
         ///   <para>タイムピッカーを表示する</para>
         /// </summary>
         PICKER,
     }
-    
+
     public enum TimerStatus {
         PLAY,
         PAUSE,
         STOP,
         STOP_AND_HIDDEN,
     }
+    
+    #endregion
 }
