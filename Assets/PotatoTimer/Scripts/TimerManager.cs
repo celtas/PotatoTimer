@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.Events;
 
 public class TimerManager : MonoBehaviour {
     [SerializeField] private float _initTime, _elapsedTime;
@@ -14,6 +13,8 @@ public class TimerManager : MonoBehaviour {
     [SerializeField] private ProgressRing[] _progressRings;
     [SerializeField] private ImageButton _startButton, _pauseButton, _resumeButton, _cancelButton, _modifyButton;
     [SerializeField] private GameObject _timerObjects;
+    // 各タイマー
+    [SerializeField] private RectTransform[] _contents;
     
     public TimePicker timePicker;
 
@@ -259,23 +260,33 @@ public class TimerManager : MonoBehaviour {
     }
     
     // コンテンツメニュー
-    public void clickContent(int index) {
-        _selectContentIndex = index;
-        switch (index) {
+    public void clickContent(int clickContentIndex) {
+        _selectContentIndex = clickContentIndex;
+        switch (clickContentIndex) {
             case -1:
                 displayType = BottomAreaDisplayType.TIMER;
                 break;
             case 0:
             case 1:
             case 2:
+                for (int index=0;index < _contents.Length;index++) {
+                    RectTransform rectTransform = _contents[index];
+                    // タッチされた要素
+                    if (index == clickContentIndex) {
+                        rectTransform.DOLocalMoveY(0,1.5f).SetEase(Ease.OutQuint);
+                    }
+                    else {
+                        rectTransform.DOLocalMoveY(rectTransform.rect.height, 1.5f).SetEase(Ease.OutQuint);
+                    }
+                }
                 displayType = BottomAreaDisplayType.PICKER;
                 break;
         }
     }
 
     // フッターメニュー
-    public void clickFooterMenu(int index) {
-        switch (index) {
+    public void clickFooterMenu(int clickContentIndex) {
+        switch (clickContentIndex) {
             case 0:
                 break;
             case 1:
