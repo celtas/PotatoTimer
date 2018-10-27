@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,8 +54,16 @@ public class DrumScrollRect : ScrollRect {
     }
 
     public void Awake() {
+        base.Awake();
         // ロールコンテンツを取得
         _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
+
+        if (_contents.Length == 0) {
+            gameObject.SetActive(false);
+            Debug.Log(gameObject.name+": DrumRollUI - Not Found Contents");
+            return;
+        }
+
         _selectedContentText = _contents[0].GetComponent<TextMeshProUGUI>().text;
     }
     
@@ -142,7 +150,7 @@ public class DrumScrollRect : ScrollRect {
             return false;
 
         // 上下の要素をスクロールしすぎた時に弾性で戻る処理を優先させる
-        if (Mathf.Abs(content.localPosition.y) > contentSizeDeltaHalf)
+        if (verticalNormalizedPosition < 0f || verticalNormalizedPosition > 1f)
             return false;
 
         return true;
@@ -179,7 +187,7 @@ public class DrumScrollRect : ScrollRect {
         
         if (axis_x > 1f)
             axis_x = 1;
-
+        
         float axis_y = Mathf.Sqrt(1f - axis_x * axis_x);
         
         rectTransform.localScale = new Vector3(rectTransform.localScale.x, axis_y, rectTransform.localScale.z);
@@ -229,5 +237,9 @@ public class DrumScrollRect : ScrollRect {
             _selectedContentText = value;
             _timePicker.onChangedValue();
         }
+    }
+    
+    private void OnValidate() {
+        base.OnValidate();
     }
 }
