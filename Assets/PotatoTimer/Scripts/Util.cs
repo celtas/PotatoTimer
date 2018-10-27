@@ -37,4 +37,9 @@ public static class Util {
     public static T[] GetComponentsInChildrenWithoutSelf<T>(this GameObject self) where T : Component {
         return self.GetComponentsInChildren<T>().Where(c => self != c.gameObject).ToArray();
     }
+    
+    // 自身を含めない子要素のコンポーネントを取得
+    public static T GetComponentInChildrenWithoutSelf<T>(this GameObject self) where T : Component {
+        return self.GetComponentsInChildren<T>().Where(c => self != c.gameObject).ToArray().First();
+    }
 }
