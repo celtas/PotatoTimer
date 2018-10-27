@@ -245,7 +245,7 @@ public class TimerManager : MonoBehaviour {
                         RectTransform rectTransform = _contents[index];
                         rectTransform.DOLocalMoveY(-rectTransform.rect.height * index, 1.5f).SetEase(Ease.OutQuint);
                     }
-                    displayType = BottomAreaDisplayType.PICKER;
+                    displayType = BottomAreaDisplayType.TIMER;
                     break;
             }
         });

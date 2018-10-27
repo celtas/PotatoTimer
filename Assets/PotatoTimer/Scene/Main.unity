@@ -2493,7 +2493,7 @@ GameObject:
   - component: {fileID: 116865404}
   - component: {fileID: 116865403}
   m_Layer: 5
-  m_Name: Menu4
+  m_Name: 3_Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2570,7 +2570,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   clickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: OnClickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   enterEvent:
@@ -4484,7 +4495,7 @@ GameObject:
   - component: {fileID: 280207601}
   - component: {fileID: 280207600}
   m_Layer: 5
-  m_Name: Menu3
+  m_Name: 2_Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4561,7 +4572,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   clickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: OnClickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   enterEvent:
@@ -8137,7 +8159,7 @@ GameObject:
   - component: {fileID: 585489226}
   - component: {fileID: 585489225}
   m_Layer: 5
-  m_Name: Menu2
+  m_Name: 1_Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8214,7 +8236,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   clickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: OnClickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   enterEvent:
@@ -10476,7 +10509,7 @@ RectTransform:
   - {fileID: 1049940219}
   - {fileID: 1850630265}
   - {fileID: 1264787788}
-  m_Father: {fileID: 1692772302}
+  m_Father: {fileID: 1593351162}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.333333}
@@ -14197,7 +14230,7 @@ RectTransform:
   - {fileID: 5619765}
   - {fileID: 915078634}
   - {fileID: 30739163}
-  m_Father: {fileID: 1692772302}
+  m_Father: {fileID: 1593351162}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -14322,7 +14355,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 250317375}
-        m_MethodName: clickContent
+        m_MethodName: OnClickContentMenu
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15795,12 +15828,12 @@ RectTransform:
   m_Children:
   - {fileID: 70317022}
   m_Father: {fileID: 1692772302}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.037851855, y: 0.72479165}
-  m_AnchorMax: {x: 1, y: 0.8795209}
-  m_AnchoredPosition: {x: 0, y: 107.82715}
-  m_SizeDelta: {x: 0, y: 158.18889}
+  m_AnchorMin: {x: 0.037851855, y: 0.666666}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1097517913
 MonoBehaviour:
@@ -16812,7 +16845,7 @@ GameObject:
   - component: {fileID: 1170707430}
   - component: {fileID: 1170707429}
   m_Layer: 5
-  m_Name: Menu1
+  m_Name: 0_Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16889,7 +16922,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   clickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: OnClickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   enterEvent:
@@ -19557,7 +19601,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 250317375}
-        m_MethodName: clickContent
+        m_MethodName: OnClickContentMenu
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22553,7 +22597,7 @@ RectTransform:
   - {fileID: 1279600942}
   - {fileID: 1778825534}
   - {fileID: 887101809}
-  m_Father: {fileID: 1692772302}
+  m_Father: {fileID: 1593351162}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.666666}
@@ -23535,6 +23579,42 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1590107961}
   m_CullTransparentMesh: 0
+--- !u!1 &1593351161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1593351162}
+  m_Layer: 0
+  m_Name: Contents
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1593351162
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1593351161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 993555919}
+  - {fileID: 779205908}
+  - {fileID: 1527833214}
+  m_Father: {fileID: 1692772302}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1599321671
 GameObject:
   m_ObjectHideFlags: 0
@@ -24636,9 +24716,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 993555919}
-  - {fileID: 779205908}
-  - {fileID: 1527833214}
+  - {fileID: 1593351162}
   - {fileID: 1097517912}
   m_Father: {fileID: 2085249915}
   m_RootOrder: 3
@@ -25393,7 +25471,7 @@ GameObject:
   - component: {fileID: 1738548343}
   - component: {fileID: 1738548342}
   m_Layer: 5
-  m_Name: Menu5
+  m_Name: 4_Preference
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25470,7 +25548,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   clickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250317375}
+        m_MethodName: OnClickFooterMenu
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   enterEvent:
@@ -26912,7 +27001,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 250317375}
-        m_MethodName: clickContent
+        m_MethodName: OnClickContentMenu
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
