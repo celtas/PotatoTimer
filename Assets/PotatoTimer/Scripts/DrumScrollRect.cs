@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,10 +59,12 @@ public class DrumScrollRect : ScrollRect {
         _contents = content.gameObject.GetComponentsInChildrenWithoutSelf<RectTransform>();
         _selectedContentText = _contents[0].GetComponent<TextMeshProUGUI>().text;
     }
-
-    private IEnumerator Start() {
+    
+    private void Start() {
+        base.Start();
+        
         // ContentSizeFilterが実行されるまで待つ
-        yield return new WaitForFixedUpdate();
+        Canvas.ForceUpdateCanvases();
         
         // ロール全体の高さの半分
         contentSizeDeltaHalf = content.sizeDelta.y / 2f + 0.03f;
