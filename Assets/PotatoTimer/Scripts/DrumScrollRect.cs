@@ -26,7 +26,6 @@ public class DrumScrollRect : ScrollRect {
     // ロールコンテンツリスト
     private RectTransform[] _contents;
     // ロールサイズ
-    private float contentSizeDeltaHalf;
     private float contentHeightHalf;
     // ロールが表示されているエリアの中央のサイズ
     [SerializeField] private RectTransform _centerRect;
@@ -66,13 +65,23 @@ public class DrumScrollRect : ScrollRect {
         // ContentSizeFilterが実行されるまで待つ
         Canvas.ForceUpdateCanvases();
         
-        // ロール全体の高さの半分
-        contentSizeDeltaHalf = content.sizeDelta.y / 2f + 0.03f;
+        RectTransform viewportRect = content.parent.GetComponent<RectTransform>();
+        RectTransform rollContent = content.gameObject.GetComponentInChildrenWithoutSelf<RectTransform>();
+        VerticalLayoutGroup vlg = content.gameObject.GetComponent<VerticalLayoutGroup>();
+        
         // 表示されているロールの高さの半分
-        contentHeightHalf = content.rect.height/2f;
+        contentHeightHalf = viewportRect.rect.height/2f;
+        
+        // ロールコンテンツの終端からの余白を設定
+        int padding_space = (int) ((viewportRect.rect.height - rollContent.rect.height) / 2);
+        vlg.padding.top = padding_space;
+        vlg.padding.bottom = padding_space;
+        
+        // paddingをcontentのrectTransformに即座に反映
+        LayoutRebuilder.ForceRebuildLayoutImmediate(content);
         
         // ロールコンテンツの一番上が表示エリアの中央に来るように合わせる
-        content.localPosition = new Vector3(content.localPosition.x, -content.sizeDelta.y / 2, content.localPosition.z);
+        SetNormalizedPosition(1f,1);
         
         // 初期化フラグ
         initializing = false;
