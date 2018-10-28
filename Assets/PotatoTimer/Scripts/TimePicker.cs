@@ -1,11 +1,63 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using System.Security.Authentication;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class TimePicker : MonoBehaviour {
     public DrumScrollRect hourDrum, minuteDrum, secondDrum;
-    public Action<int,int,int> onChanged;
+    public Action<int, int, int> onChanged;
+
+    [Header("HighlightArea Preferences")]
+    public HighlightAreaPreferences option;
+
+    [Serializable]
+    public class HighlightAreaPreferences {
+        [TooltipAttribute("Adjust highlight area and border")]
+        public bool autoHighlightSizeAndPosition;
+        [TooltipAttribute("Adjust border")] public bool autoBorderSizeAndPosition;
+        public RectTransform borderTop, borderBottom, highlightArea;
+    }
     
+    //コンストラクタ
+    void OnEnable() {
+        //Hierarchyに変化があった時にメソッドが呼ばれるように。
+        EditorApplication.hierarchyWindowChanged += OnHierarchyChanged;
+    }
+    //コンストラクタ
+    void OnDisable() {
+        //Hierarchyに変化があった時にメソッドが呼ばれるように。
+        EditorApplication.hierarchyWindowChanged -= OnHierarchyChanged;
+    }
+
+
+    //Hierarchyに変化があった
+    private void OnHierarchyChanged() {
+        GameObject[] gos = {hourDrum.gameObject, hourDrum.gameObject, secondDrum.gameObject};
+        TextMeshProUGUI textMesh = gos.Select(g => g.GetComponentInChildren<TextMeshProUGUI>())
+            .FirstOrDefault(tm => (tm != null));
+        if (textMesh == null)
+            return;
+
+        float rollContentHeight = textMesh.GetComponent<RectTransform>().rect.height;
+        if (rollContentHeight <= 0f)
+            return;
+
+        if (option.autoHighlightSizeAndPosition) {
+            option.highlightArea.sizeDelta = new Vector2(option.highlightArea.sizeDelta.x, rollContentHeight);
+        }
+
+        if (option.autoBorderSizeAndPosition) {
+            option.borderTop.offsetMin = new Vector2(option.borderTop.offsetMin.x, rollContentHeight / 2f);
+            option.borderTop.sizeDelta = new Vector2(option.borderTop.sizeDelta.x, 2);
+            option.borderBottom.offsetMax = new Vector2(option.borderBottom.offsetMax.x, -rollContentHeight / 2f);
+            option.borderBottom.sizeDelta = new Vector2(option.borderBottom.sizeDelta.x, 2);
+        }
+    }
+
     /// <summary>
     /// ロールコンテンツの値が変更した時に呼び出される
     /// </summary>
@@ -41,7 +93,7 @@ public class TimePicker : MonoBehaviour {
 //    }
 
     public void setTime(int hour, int minute, int second) {
-        StartCoroutine(setTimeAfterInit(hour,minute,second));
+        StartCoroutine(setTimeAfterInit(hour, minute, second));
     }
 
     public void setTime(int seconds) {
@@ -55,7 +107,7 @@ public class TimePicker : MonoBehaviour {
         while (hourDrum.initializing || minuteDrum.initializing || secondDrum.initializing) {
             yield return null;
         }
-        
+
         hourDrum.SelectedContentText = hour.ToString();
         minuteDrum.SelectedContentText = minute.ToString();
         secondDrum.SelectedContentText = second.ToString();
